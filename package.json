@@ -5,7 +5,9 @@
   "author": "Jiheon-Lee <wlgjsdl0@gmail.com>",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "dev": "nodemon --exec babel-node ./src/bin/www.js",
+    "clean": "rm -rf dist",
+    "build": "npm run clean && NODE_ENV=production babel ./src --out-dir dist --copy-files"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
@@ -20,6 +22,7 @@
     "@babel/core": "^7.15.0",
     "@babel/node": "^7.14.9",
     "@babel/preset-env": "^7.15.0",
-    "babel-plugin-transform-remove-console": "^6.9.4"
+    "babel-plugin-transform-remove-console": "^6.9.4",
+    "nodemon": "^2.0.12"
   }
 }
