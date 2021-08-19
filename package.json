@@ -10,6 +10,17 @@
     "build": "npm run clean && NODE_ENV=production babel ./src --out-dir dist --copy-files",
     "start": "pm2 start ecosystem.config.js"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "./src/**/*.js": [
+      "./node_modules/.bin/eslint --fix",
+      "./node_modules/.bin/prettier --write"
+    ]
+  },
   "dependencies": {
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
@@ -32,6 +43,8 @@
     "eslint-plugin-import": "^2.24.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^3.4.0",
+    "husky": "^4.3.8",
+    "lint-staged": "^11.1.2",
     "nodemon": "^2.0.12",
     "prettier": "2.3.2"
   }
