@@ -7,6 +7,7 @@ import dotenv from 'dotenv'
 
 import indexRouter from './routes/index'
 import usersRouter from './routes/users'
+import productsRouter from './routes/products'
 
 dotenv.config()
 
@@ -24,6 +25,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 app.use('/', indexRouter)
 app.use('/users', usersRouter)
+app.use('/products', productsRouter)
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
