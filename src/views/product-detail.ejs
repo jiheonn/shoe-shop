@@ -241,22 +241,64 @@
                   </div>
                 </div>
               </div>
+              <div class="col-12">
+                <% if (Object.keys(productUserLike).length === 0) { %>
+                <a href="/auth/login"><i class="far fa-heart fa-3x"></i></a>
+                <span id="heart_count" class="ml-1" style="font-size: 1.5rem"
+                  >좋아요 <%= productLike.like_count %></span
+                >
+                <% } else { %> <% if (productUserLike.like_check === 0) { %>
+                <i id="heart" class="far fa-heart fa-3x"></i>
+                <span id="heart_count" class="ml-1" style="font-size: 1.5rem"
+                  ><%= productLike.like_count %></span
+                >
+                <% } else { %>
+                <i id="heart" class="fas fa-heart fa-3x"></i>
+                <span id="heart_count" class="ml-1" style="font-size: 1.5rem"
+                  ><%= productLike.like_count %></span
+                >
+                <% } %> <% } %>
+              </div>
               <div class="col-md-10 mt-5">
                 <div class="title-box-d">
                   <h3 class="title-d">Review (<%= review_count %>)</h3>
                 </div>
                 <div class="box-comments">
                   <ul class="list-comments">
-                    <% for (review of productReview) { %>
+                    <% if (review_count === 0) { %>
+                    <li>
+                      <p>
+                        해당 상품에 대한 리뷰가 존재하지 않습니다. 리뷰를 작성해
+                        보세요!
+                      </p>
+                    </li>
+                    <% } else { %> <% for (review of productReview) { %>
                     <li>
                       <div class="comment-details">
                         <h4 class="comment-author"><%= review.u_id %></h4>
-                        <p class="comment-description">
+                        <p id="<%= review.r_id %>" class="comment-description">
                           > <%= review.r_contents %>
                         </p>
+                        <% if (review.u_id === u_id) { %>
+                        <button
+                          id="update_review"
+                          class="btn ml-1"
+                          value="<%= review.r_id %>"
+                        >
+                          수정하기
+                        </button>
+                        <button
+                          id="delete_review"
+                          class="btn"
+                          value="<%= review.r_id %>"
+                        >
+                          삭제하기
+                        </button>
+                        <% } %>
                       </div>
                     </li>
-                    <% } %>
+                    <hr class="mb-5" />
+                    <% } %> <% } %>
                     <!-- <li class="comment-children">
                       <div class="comment-avatar">
                         <img src="img/author-1.jpg" alt="" />
@@ -291,23 +333,29 @@
                 </div>
                 <div class="form-comments">
                   <div class="title-box-d">
-                    <h3 class="title-d">Leave a Reply</h3>
+                    <h3 class="title-d">Leave a Review</h3>
                   </div>
-                  <form class="form-a">
+                  <form
+                    class="form-a"
+                    action="/products/<%= p_id %>/review"
+                    method="POST"
+                  >
+                    <input type="hidden" name="u_id" value="<%= u_id %>" />
                     <div class="row">
                       <div class="col-md-6 mb-3">
                         <div class="form-group">
-                          <label for="inputName">Enter name</label>
+                          <label for="inputName">ID</label>
                           <input
                             type="text"
                             class="form-control form-control-lg form-control-a"
-                            id="inputName"
-                            placeholder="Name *"
+                            id="input_ID"
+                            placeholder="로그인 후 이용이 가능합니다."
+                            readonly
                             required
                           />
                         </div>
                       </div>
-                      <div class="col-md-6 mb-3">
+                      <!-- <div class="col-md-6 mb-3">
                         <div class="form-group">
                           <label for="inputEmail1">Enter email</label>
                           <input
@@ -329,15 +377,15 @@
                             placeholder="Website"
                           />
                         </div>
-                      </div>
+                      </div> -->
                       <div class="col-md-12 mb-3">
                         <div class="form-group">
-                          <label for="textMessage">Enter message</label>
+                          <label for="textMessage">Contents</label>
                           <textarea
-                            id="textMessage"
+                            id="input_contents"
                             class="form-control"
-                            placeholder="Comment *"
-                            name="message"
+                            placeholder="내용을 입력해 주세요 *"
+                            name="r_contents"
                             cols="45"
                             rows="8"
                             required
@@ -345,8 +393,12 @@
                         </div>
                       </div>
                       <div class="col-md-12">
-                        <button type="submit" class="btn btn-a">
-                          Send Message
+                        <button
+                          id="review_submit"
+                          type="submit"
+                          class="btn btn-a"
+                        >
+                          Save
                         </button>
                       </div>
                     </div>
@@ -368,6 +420,69 @@
     <% include ./common/foot-meta.ejs %>
 
     <script>
+      // 페이지 로드 시 로그인이 안되어 있다면, 리뷰 작성 폼 disable
+      $(document).ready(() => {
+        const u_id = $('input[name=u_id]').val()
+
+        if (u_id === '') {
+          $('#input_ID').attr('disabled', true)
+          $('#input_contents').attr('disabled', true)
+          $('#review_submit').attr('disabled', true)
+        } else {
+          $('#input_ID').val(u_id)
+        }
+      })
+
+      // 좋아요 off 상태에서 클릭 시 ON
+      $(document).on('click', '.far.fa-heart.fa-3x', () => {
+        const u_id = $('input[name=u_id]').val()
+        const p_id = $('#p_id').text()
+
+        $.ajax({
+          url: `/products/${p_id}/like`,
+          method: 'POST',
+          data: {
+            u_id,
+            like_status: false,
+          },
+          success: data => {
+            if (data.status == 'success') {
+              $('#heart').attr('class', 'fas fa-heart fa-3x')
+
+              const heart_count = parseInt($('#heart_count').text(), 10) + 1
+              $('#heart_count').text(`${heart_count}`)
+            } else {
+              alert('문제가 발생했습니다. 잠시 후 다시 시도해 주세요.')
+            }
+          },
+        })
+      })
+
+      // 좋아요 ON 상태에서 클릭 시 OFF
+      $(document).on('click', '.fas.fa-heart.fa-3x', () => {
+        const u_id = $('input[name=u_id]').val()
+        const p_id = $('#p_id').text()
+
+        $.ajax({
+          url: `/products/${p_id}/like`,
+          method: 'POST',
+          data: {
+            u_id,
+            like_status: true,
+          },
+          success: data => {
+            if (data.status == 'success') {
+              $('#heart').attr('class', 'far fa-heart fa-3x')
+
+              const heart_count = parseInt($('#heart_count').text(), 10) - 1
+              $('#heart_count').text(`${heart_count}`)
+            } else {
+              alert('문제가 발생했습니다. 잠시 후 다시 시도해 주세요.')
+            }
+          },
+        })
+      })
+
       // 해당 상품에 대한 색상의 사이즈 가져오기
       $('#product_color').change(e => {
         const p_color = e.target.value
@@ -386,10 +501,71 @@
           success: data => {
             for (product of data) {
               $('#product_size').append(`
-                <option value=${product.p_size}>
-                  ${product.p_size}
-                </option>
-              `)
+                  <option value=${product.p_size}>
+                    ${product.p_size}
+                  </option>
+                `)
+            }
+          },
+        })
+      })
+
+      // 1. 자신이 작성한 리뷰 중에서 수정하기 버튼 클릭 시
+      // 리뷰 내용 읽기 -> 수정 폼으로 변경
+      $(document).on('click', '#update_review', e => {
+        const r_id = e.target.value
+
+        let r_contents = $(`#${r_id}`).text().trim().replace('> ', '')
+
+        $(`#${r_id}`).empty()
+        $(`#${r_id}`).append(`
+            <input class="form-control form-control-lg form-control-a" value="${r_contents}" />
+          `)
+        $(e.target).attr('id', 'modify_review')
+      })
+
+      // 2. 위의 1번 이벤트 이후(=수정 폼 작성 완료)
+      // 다시 수정하기 버튼을 클릭 시 POST 요청
+      $(document).on('click', '#modify_review', e => {
+        const r_id = e.target.value
+        const r_contents = $(`#${r_id} input`).val()
+        const p_id = $('#p_id').text()
+
+        $.ajax({
+          url: `/products/${p_id}/review/update`,
+          method: 'POST',
+          data: {
+            r_id,
+            r_contents,
+          },
+          success: data => {
+            if (data.status === 'success') {
+              location.reload()
+            } else {
+              alert('문제가 발생했습니다. 잠시 후 다시 시도해 주세요.')
+            }
+          },
+        })
+      })
+
+      // 자신이 작성한 리뷰 중에서 삭제하기 버튼 클릭 시
+      // POST 요청
+      $(document).on('click', '#delete_review', e => {
+        const r_id = e.target.value
+
+        const p_id = $('#p_id').text()
+
+        $.ajax({
+          url: `/products/${p_id}/review/delete`,
+          method: 'POST',
+          data: {
+            r_id,
+          },
+          success: data => {
+            if (data.status === 'success') {
+              location.reload()
+            } else {
+              alert('문제가 발생했습니다. 잠시 후 다시 시도해 주세요.')
             }
           },
         })
