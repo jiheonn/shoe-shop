@@ -152,10 +152,37 @@ const selectProductReview = async p_id => {
   })
 }
 
+const selectUserInfo = async u_id => {
+  return new Promise((resolve, reject) => {
+    pool.getConnection((connectionError, connection) => {
+      if (connectionError) reject(connectionError)
+
+      const sql = `
+        SELECT
+          *
+        FROM
+          users
+        WHERE
+          u_id = ?
+      `
+
+      connection.query(sql, [u_id], (queryError, rows) => {
+        if (queryError) reject(queryError)
+
+        // query 결과 반환
+        resolve(rows[0])
+      })
+      // connection을 pool에 반환
+      connection.release()
+    })
+  })
+}
+
 export default {
   selectProductList,
   selectProductInfo,
   selectProductColors,
   selectProductSize,
   selectProductReview,
+  selectUserInfo,
 }

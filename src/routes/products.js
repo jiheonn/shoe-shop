@@ -6,13 +6,17 @@ const router = express.Router()
 
 /* /products */
 router.get('/', async (req, res) => {
+  const username = req.user ? req.user.u_name : ''
+
   const rows = await db_querys.selectProductList()
   const productList = formater.productInfoFormat(rows)
 
-  res.render('products', { productList })
+  res.render('products', { username, productList })
 })
 
 router.get('/:p_id', async (req, res) => {
+  const username = req.user ? req.user.u_name : ''
+
   const { p_id } = req.params
 
   const rows = await db_querys.selectProductInfo(p_id)
@@ -24,6 +28,7 @@ router.get('/:p_id', async (req, res) => {
   const review_count = productReview.length
 
   res.render('product-detail', {
+    username,
     productInfo,
     productColors,
     productReview,
