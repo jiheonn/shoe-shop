@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <% include ./common/head-meta %>
+    <!-- Table datatable css -->
+    <link
+      href="/assets/libs/datatables/dataTables.bootstrap4.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      href="/assets/libs/datatables/responsive.bootstrap4.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      href="/assets/libs/datatables/buttons.bootstrap4.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      href="/assets/libs/datatables/fixedHeader.bootstrap4.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      href="/assets/libs/datatables/scroller.bootstrap4.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      href="/assets/libs/datatables/dataTables.colVis.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      href="/assets/libs/datatables/fixedColumns.bootstrap4.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+  </head>
+
+  <body>
+    <!-- Begin page -->
+    <div id="wrapper">
+      <% include ./common/leftbar %>
+      <!-- ============================================================== -->
+      <!-- Start Page Content here -->
+      <!-- ============================================================== -->
+
+      <div class="content-page">
+        <div class="content">
+          <!-- Start Content-->
+          <div class="container-fluid">
+            <!-- start page title -->
+            <div class="row">
+              <div class="col-12">
+                <div class="page-title-box">
+                  <h4 class="page-title">상품 정보</h4>
+                </div>
+              </div>
+            </div>
+            <!-- end page title -->
+
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="card-box table-responsive">
+                  <table
+                    id="datatable-buttons"
+                    class="
+                      table table-striped table-bordered
+                      dt-responsive
+                      nowrap
+                    "
+                    style="
+                      border-collapse: collapse;
+                      border-spacing: 0;
+                      width: 100%;
+                    "
+                  >
+                    <thead>
+                      <tr>
+                        <th>품번</th>
+                        <th>브랜드명</th>
+                        <th>카테고리명</th>
+                        <th>상품명</th>
+                        <th>가격</th>
+                        <th>상품설명</th>
+                        <th>상품타입</th>
+                        <th>등록일자</th>
+                        <th>수정하기</th>
+                        <th>삭제하기</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% for (product of productList) { %>
+                      <tr>
+                        <td><%= product.p_id %></td>
+                        <td><%= product.b_name %></td>
+                        <td><%= product.c_name %></td>
+                        <td><%= product.p_name %></td>
+                        <td><%= product.p_price %></td>
+                        <td><%= product.p_description %></td>
+                        <td><%= product.p_type %></td>
+                        <td><%= product.p_reg_date %></td>
+                        <th>
+                          <button
+                            name="modify_product"
+                            value="<%= product.p_id %>"
+                            style="border: 0; width: 100px; height: 30px"
+                          >
+                            수정
+                          </button>
+                        </th>
+                        <th>
+                          <button
+                            name="remove_product"
+                            value="<%= product.p_id %>"
+                            style="border: 0; width: 100px; height: 30px"
+                          >
+                            제거
+                          </button>
+                        </th>
+                      </tr>
+                      <% } %>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <!-- end row -->
+          </div>
+          <!-- end container-fluid -->
+        </div>
+        <!-- end content -->
+
+        <!-- Footer Start -->
+        <% include ./common/footer %>
+        <!-- end Footer -->
+      </div>
+
+      <!-- ============================================================== -->
+      <!-- End Page content -->
+      <!-- ============================================================== -->
+    </div>
+    <!-- END wrapper -->
+
+    <% include ./common/foot-meta %>
+
+    <!-- Datatable plugin js -->
+    <script src="/assets/libs/datatables/jquery.dataTables.min.js"></script>
+    <script src="/assets/libs/datatables/dataTables.bootstrap4.min.js"></script>
+
+    <script src="/assets/libs/datatables/dataTables.responsive.min.js"></script>
+    <script src="/assets/libs/datatables/responsive.bootstrap4.min.js"></script>
+
+    <script src="/assets/libs/datatables/dataTables.buttons.min.js"></script>
+    <script src="/assets/libs/datatables/buttons.bootstrap4.min.js"></script>
+
+    <script src="/assets/libs/datatables/buttons.html5.min.js"></script>
+    <script src="/assets/libs/datatables/buttons.print.min.js"></script>
+
+    <script src="/assets/libs/datatables/dataTables.keyTable.min.js"></script>
+    <script src="/assets/libs/datatables/dataTables.fixedHeader.min.js"></script>
+    <script src="/assets/libs/datatables/dataTables.scroller.min.js"></script>
+    <script src="/assets/libs/datatables/dataTables.fixedColumns.min.js"></script>
+
+    <script src="/assets/libs/jszip/jszip.min.js"></script>
+    <script src="/assets/libs/pdfmake/pdfmake.min.js"></script>
+    <script src="/assets/libs/pdfmake/vfs_fonts.js"></script>
+
+    <!-- Datatables init -->
+    <script src="/assets/js/pages/datatables.init.js"></script>
+
+    <script>
+      $(document).on('click', 'button[name=modify_product]', e => {
+        const p_id = e.target.value
+        location.href = `/admin/products/modify/${p_id}`
+      })
+
+      $(document).on('click', 'button[name=remove_product]', e => {
+        const p_id = e.target.value
+        $.ajax({
+          url: '/admin/products/delete',
+          method: 'POST',
+          data: {
+            p_id,
+          },
+          success: data => {
+            location.reload()
+          },
+        })
+      })
+    </script>
+  </body>
+</html>
