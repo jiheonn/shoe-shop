@@ -36,4 +36,6 @@ const productInfoFormat = productList => {
 
 export default {
   productInfoFormat,
+  dateFormat,
+  priceFormat,
 }
