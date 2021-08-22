@@ -4,9 +4,6 @@
   "repository": "https://github.com/Jiheon-Lee/backend-interview.git",
   "author": "Jiheon-Lee <wlgjsdl0@gmail.com>",
   "private": true,
-  "engines": {
-    "node": "v14.15.3"
-  },
   "scripts": {
     "dev": "nodemon --exec babel-node ./src/bin/www.js",
     "clean": "rm -rf dist",
@@ -36,6 +33,7 @@
     "http-errors": "~1.6.3",
     "moment": "^2.29.1",
     "morgan": "~1.9.1",
+    "multer": "^1.4.3",
     "mysql": "^2.18.1",
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
