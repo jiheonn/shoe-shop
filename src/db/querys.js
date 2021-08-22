@@ -22,6 +22,8 @@ const selectProductList = async () => {
           p_id, p_name, p_price, p_image, p_type, p_reg_date
         FROM
           products
+        ORDER BY
+          p_reg_date DESC;
       `
 
       connection.query(sql, (queryError, rows) => {
@@ -375,6 +377,278 @@ const deleteProductReview = async r_id => {
   })
 }
 
+const selectBrandList = async () => {
+  return new Promise((resolve, reject) => {
+    pool.getConnection((connectionError, connection) => {
+      if (connectionError) reject(connectionError)
+
+      const sql = `
+        SELECT
+          *
+        FROM
+          brands
+      `
+
+      connection.query(sql, [], (queryError, rows) => {
+        if (queryError) reject(queryError)
+
+        resolve(rows)
+      })
+      connection.release()
+    })
+  })
+}
+
+const selectcategoryList = async () => {
+  return new Promise((resolve, reject) => {
+    pool.getConnection((connectionError, connection) => {
+      if (connectionError) reject(connectionError)
+
+      const sql = `
+        SELECT
+          *
+        FROM
+          categories
+      `
+
+      connection.query(sql, [], (queryError, rows) => {
+        if (queryError) reject(queryError)
+
+        resolve(rows)
+      })
+      connection.release()
+    })
+  })
+}
+
+const productOrderbyPopular = async () => {
+  return new Promise((resolve, reject) => {
+    pool.getConnection((connectionError, connection) => {
+      if (connectionError) reject(connectionError)
+
+      const sql = `
+        SELECT
+          p.*, sum(od.p_quantity) AS p_order_count
+        FROM
+          products AS p
+        LEFT OUTER JOIN
+          orderDetails AS od
+          ON
+            p.p_id = od.p_id
+        GROUP BY
+          p.p_id
+        ORDER BY
+          p_order_count DESC;
+      `
+
+      connection.query(sql, [], (queryError, rows) => {
+        if (queryError) reject(queryError)
+
+        resolve(rows)
+      })
+      connection.release()
+    })
+  })
+}
+
+const productOrderbyReview = async () => {
+  return new Promise((resolve, reject) => {
+    pool.getConnection((connectionError, connection) => {
+      if (connectionError) reject(connectionError)
+
+      const sql = `
+        SELECT
+          p.*, count(r.p_id) AS p_review_count
+        FROM
+          products AS p
+        LEFT OUTER JOIN
+          reviews AS r
+          ON
+            p.p_id = r.p_id
+        GROUP BY
+          p.p_id
+        ORDER BY
+          p_review_count desc
+      `
+
+      connection.query(sql, [], (queryError, rows) => {
+        if (queryError) reject(queryError)
+
+        resolve(rows)
+      })
+      connection.release()
+    })
+  })
+}
+
+const productOrderbyName = async () => {
+  return new Promise((resolve, reject) => {
+    pool.getConnection((connectionError, connection) => {
+      if (connectionError) reject(connectionError)
+
+      const sql = `
+        SELECT
+          p_id, p_name, p_price, p_image, p_type, p_reg_date
+        FROM
+          products
+        ORDER BY
+          p_name ASC
+      `
+
+      connection.query(sql, [], (queryError, rows) => {
+        if (queryError) reject(queryError)
+
+        resolve(rows)
+      })
+      connection.release()
+    })
+  })
+}
+
+const productFilter = async (brand, category, p_type) => {
+  let sql = `
+    SELECT
+      *
+    FROM
+      products AS p
+    JOIN
+      brands AS b
+        ON
+          p.b_id = b.b_id
+    JOIN
+      categories AS c
+        ON
+          p.c_id = c.c_id
+  `
+
+  let valid = false
+  if (!brand.includes('0') && !brand.includes('브랜드')) {
+    sql += `
+      WHERE b.b_id = ${brand}
+    `
+    valid = true
+  }
+
+  if (!category.includes('0') && !category.includes('카테고리')) {
+    if (valid) {
+      sql += `
+        AND c.c_id = ${category}
+      `
+    } else {
+      sql += `
+        WHERE c.c_id = ${category}
+      `
+    }
+    valid = true
+  }
+
+  if (!p_type.includes('상품타입')) {
+    if (valid) {
+      sql += `
+        AND p.p_type = ${p_type}
+      `
+    } else {
+      sql += `
+        WHERE p.p_type = ${p_type}
+      `
+    }
+    valid = true
+  }
+
+  return new Promise((resolve, reject) => {
+    pool.getConnection((connectionError, connection) => {
+      if (connectionError) reject(connectionError)
+
+      connection.query(sql, [], (queryError, rows) => {
+        if (queryError) reject(queryError)
+
+        resolve(rows)
+      })
+      connection.release()
+    })
+  })
+}
+
+const selectLatestLimit6 = async () => {
+  return new Promise((resolve, reject) => {
+    pool.getConnection((connectionError, connection) => {
+      if (connectionError) reject(connectionError)
+
+      const sql = `
+        SELECT
+          p_id, p_name, p_price, p_image, p_type, p_reg_date
+        FROM
+          products
+        ORDER BY
+          p_reg_date DESC
+        LIMIT 6
+      `
+
+      connection.query(sql, [], (queryError, rows) => {
+        if (queryError) reject(queryError)
+
+        resolve(rows)
+      })
+      connection.release()
+    })
+  })
+}
+
+const selectPopularLimit6 = async () => {
+  return new Promise((resolve, reject) => {
+    pool.getConnection((connectionError, connection) => {
+      if (connectionError) reject(connectionError)
+
+      const sql = `
+        SELECT
+          p.*, sum(od.p_quantity) AS p_order_count
+        FROM
+          products AS p
+        LEFT OUTER JOIN
+          orderDetails AS od
+          ON
+            p.p_id = od.p_id
+        GROUP BY
+          p.p_id
+        ORDER BY
+          p_order_count DESC
+        LIMIT 6
+      `
+
+      connection.query(sql, [], (queryError, rows) => {
+        if (queryError) reject(queryError)
+
+        resolve(rows)
+      })
+      connection.release()
+    })
+  })
+}
+
+const selectBrandProduct = async b_id => {
+  return new Promise((resolve, reject) => {
+    pool.getConnection((connectionError, connection) => {
+      if (connectionError) reject(connectionError)
+
+      const sql = `
+        SELECT
+          *
+        FROM
+          products
+        WHERE
+          b_id = ?
+      `
+
+      connection.query(sql, [b_id], (queryError, rows) => {
+        if (queryError) reject(queryError)
+
+        resolve(rows)
+      })
+      connection.release()
+    })
+  })
+}
+
 export default {
   selectProductList,
   selectProductInfo,
@@ -390,4 +664,13 @@ export default {
   insertProductReview,
   updateProductReview,
   deleteProductReview,
+  selectBrandList,
+  selectcategoryList,
+  productOrderbyPopular,
+  productOrderbyReview,
+  productOrderbyName,
+  productFilter,
+  selectLatestLimit6,
+  selectPopularLimit6,
+  selectBrandProduct,
 }

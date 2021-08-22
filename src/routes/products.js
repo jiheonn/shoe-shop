@@ -11,13 +11,48 @@ router.get('/', async (req, res) => {
   const rows = await db_querys.selectProductList()
   const productList = formater.productInfoFormat(rows)
 
-  res.render('products', { username, productList })
+  const brandList = await db_querys.selectBrandList()
+  const categoryList = await db_querys.selectcategoryList()
+
+  res.render('products', { username, productList, brandList, categoryList })
+})
+
+router.get('/order', async (req, res) => {
+  const { order_type } = req.query
+
+  let rows
+
+  if (order_type === 'popular') {
+    rows = await db_querys.productOrderbyPopular()
+  } else if (order_type === 'review') {
+    rows = await db_querys.productOrderbyReview()
+  } else if (order_type === 'name') {
+    rows = await db_querys.productOrderbyName()
+  } else {
+    rows = await db_querys.selectProductList()
+  }
+
+  res.send({
+    orderedProductList: formater.productInfoFormat(rows),
+  })
+})
+
+router.get('/filter', async (req, res) => {
+  const { brand, category, p_type } = req.query
+
+  const rows = await db_querys.productFilter(brand, category, p_type)
+
+  res.send({
+    filteredProductList: formater.productInfoFormat(rows),
+  })
 })
 
 router.get('/:p_id', async (req, res) => {
   const username = req.user ? req.user.u_name : ''
 
   const { p_id } = req.params
+
+  const brandList = await db_querys.selectBrandList()
 
   const rows = await db_querys.selectProductInfo(p_id)
   const productInfo = formater.productInfoFormat(rows)
@@ -40,6 +75,7 @@ router.get('/:p_id', async (req, res) => {
     u_id,
     p_id,
     username,
+    brandList,
     productInfo,
     productColors,
     productReview,
