@@ -137,8 +137,7 @@ router.post(
       ...req.body,
       p_image,
     }
-    const result = await db_querys.updateProduct(p_id, newProductInfo)
-    console.log(result)
+    await db_querys.updateProduct(p_id, newProductInfo)
 
     res.redirect('/admin/products')
   }
