@@ -2,123 +2,7 @@
 <html lang="en">
   <% include ./common/head-meta %>
   <body>
-    <div class="click-closed"></div>
-    <!--/ Form Search Star /-->
-    <div class="box-collapse">
-      <div class="title-box-d">
-        <h3 class="title-d">Search Property</h3>
-      </div>
-      <span class="close-box-collapse right-boxed ion-ios-close"></span>
-      <div class="box-collapse-wrap form">
-        <form class="form-a">
-          <div class="row">
-            <div class="col-md-12 mb-2">
-              <div class="form-group">
-                <label for="Type">Keyword</label>
-                <input
-                  type="text"
-                  class="form-control form-control-lg form-control-a"
-                  placeholder="Keyword"
-                />
-              </div>
-            </div>
-            <div class="col-md-6 mb-2">
-              <div class="form-group">
-                <label for="Type">Type</label>
-                <select
-                  class="form-control form-control-lg form-control-a"
-                  id="Type"
-                >
-                  <option>All Type</option>
-                  <option>For Rent</option>
-                  <option>For Sale</option>
-                  <option>Open House</option>
-                </select>
-              </div>
-            </div>
-            <div class="col-md-6 mb-2">
-              <div class="form-group">
-                <label for="city">City</label>
-                <select
-                  class="form-control form-control-lg form-control-a"
-                  id="city"
-                >
-                  <option>All City</option>
-                  <option>Alabama</option>
-                  <option>Arizona</option>
-                  <option>California</option>
-                  <option>Colorado</option>
-                </select>
-              </div>
-            </div>
-            <div class="col-md-6 mb-2">
-              <div class="form-group">
-                <label for="bedrooms">Bedrooms</label>
-                <select
-                  class="form-control form-control-lg form-control-a"
-                  id="bedrooms"
-                >
-                  <option>Any</option>
-                  <option>01</option>
-                  <option>02</option>
-                  <option>03</option>
-                </select>
-              </div>
-            </div>
-            <div class="col-md-6 mb-2">
-              <div class="form-group">
-                <label for="garages">Garages</label>
-                <select
-                  class="form-control form-control-lg form-control-a"
-                  id="garages"
-                >
-                  <option>Any</option>
-                  <option>01</option>
-                  <option>02</option>
-                  <option>03</option>
-                  <option>04</option>
-                </select>
-              </div>
-            </div>
-            <div class="col-md-6 mb-2">
-              <div class="form-group">
-                <label for="bathrooms">Bathrooms</label>
-                <select
-                  class="form-control form-control-lg form-control-a"
-                  id="bathrooms"
-                >
-                  <option>Any</option>
-                  <option>01</option>
-                  <option>02</option>
-                  <option>03</option>
-                </select>
-              </div>
-            </div>
-            <div class="col-md-6 mb-2">
-              <div class="form-group">
-                <label for="price">Min Price</label>
-                <select
-                  class="form-control form-control-lg form-control-a"
-                  id="price"
-                >
-                  <option>Unlimite</option>
-                  <option>$50,000</option>
-                  <option>$100,000</option>
-                  <option>$150,000</option>
-                  <option>$200,000</option>
-                </select>
-              </div>
-            </div>
-            <div class="col-md-12">
-              <button type="submit" class="btn btn-b">Search Property</button>
-            </div>
-          </div>
-        </form>
-      </div>
-    </div>
-    <!--/ Form Search End /-->
-
-    <% include ./common/nav %>
+    <% include ./common/search %> <% include ./common/nav %>
 
     <!--/ Intro Single star /-->
     <section class="intro-single">
@@ -157,15 +41,45 @@
           <div class="col-sm-12">
             <div class="grid-option">
               <form>
-                <select class="custom-select">
-                  <option selected>All</option>
-                  <option value="1">New to Old</option>
-                  <option value="2">For Rent</option>
-                  <option value="3">For Sale</option>
+                <select id="product_order" class="custom-select">
+                  <option value="regist" selected>등록순</option>
+                  <option value="popular">인기순</option>
+                  <option value="review">리뷰순</option>
+                  <option value="name">이름순</option>
                 </select>
               </form>
             </div>
           </div>
+          <div class="col-12 mb-3">
+            <div class="grid-option" style="float: left">
+              <form>
+                <select class="custom-select" name="product_filter">
+                  <option selected>브랜드</option>
+                  <option value="0">전체상품</option>
+                  <% for (brand of brandList) { %>
+                  <option value="<%= brand.b_id %>"><%= brand.b_name %></option>
+                  <% } %>
+                </select>
+                <select class="custom-select" name="product_filter">
+                  <option selected>카테고리</option>
+                  <option value="0">전체상품</option>
+                  <% for (category of categoryList) { %>
+                  <option value="<%= category.c_id %>">
+                    <%= category.c_name %>
+                  </option>
+                  <% } %>
+                </select>
+                <select class="custom-select" name="product_filter">
+                  <option selected>상품타입</option>
+                  <option value="0">남녀공용</option>
+                  <option value="1">남성용</option>
+                  <option value="2">여성용</option>
+                </select>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div id="product_list" class="row">
           <% for (product of productList) { %>
           <div class="col-md-4">
             <div class="card-box-a card-shadow">
@@ -250,5 +164,101 @@
     <div id="preloader"></div>
 
     <% include ./common/foot-meta.ejs %>
+
+    <script>
+      const appendProduct = product => {
+        $('#product_list').append(`
+          <div class="col-md-4">
+            <div class="card-box-a card-shadow">
+              <div class="img-box-a">
+                <img
+                  src="${product.p_image}"
+                  alt=""
+                  class="img-a img-fluid"
+                />
+              </div>
+              <div class="card-overlay">
+                <div class="card-overlay-a-content">
+                  <div class="card-header-a">
+                    <h2 class="card-title-a">
+                      <a href="/products/${product.p_id}"
+                        >${product.p_name}</a
+                      >
+                    </h2>
+                  </div>
+                  <div class="card-body-a">
+                    <div class="price-box d-flex">
+                      <span class="price-a">$ ${product.p_price}</span>
+                    </div>
+                    <a href="/products/${product.p_id}" class="link-a"
+                      >Click here to view
+                      <span class="ion-ios-arrow-forward"></span>
+                    </a>
+                  </div>
+                  <div class="card-footer-a">
+                    <ul class="card-info d-flex justify-content-around">
+                      <li>
+                        <h4 class="card-info-title">등록일</h4>
+                        <span>${product.p_reg_date}</span>
+                      </li>
+                      <li>
+                        <h4 class="card-info-title">상품타입</h4>
+                        <span>${product.p_type}</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `)
+      }
+
+      $(document).on('change', '#product_order', e => {
+        const order_type = e.target.value
+
+        $.ajax({
+          url: `/products/order?order_type=${order_type}`,
+          method: 'GET',
+          success: data => {
+            $('#product_list').empty()
+
+            for (const product of data.orderedProductList) {
+              appendProduct(product)
+            }
+          },
+        })
+      })
+
+      $(document).on('change', 'select[name=product_filter]', e => {
+        const filter_option = {}
+
+        $('select[name=product_filter] option:selected').each((idx, el) => {
+          if (idx === 0) filter_option['brand'] = el.value
+          else if (idx === 1) filter_option['category'] = el.value
+          else filter_option['p_type'] = el.value
+        })
+
+        $.ajax({
+          url: `/products/filter?brand=${filter_option.brand}&category=${filter_option.category}&p_type=${filter_option.p_type}`,
+          method: 'GET',
+          success: data => {
+            $('#product_list').empty()
+
+            if (data.filteredProductList.length > 0) {
+              for (const product of data.filteredProductList) {
+                appendProduct(product)
+              }
+            } else {
+              $('#product_list').append(`
+                <div class="col-md-4">
+                  <h5>해당되는 제품이 존재하지 않습니다.</h5>
+                </div>
+              `)
+            }
+          },
+        })
+      })
+    </script>
   </body>
 </html>
