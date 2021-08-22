@@ -7,8 +7,8 @@ import dotenv from 'dotenv'
 import flash from 'connect-flash'
 
 import indexRouter from './routes/index'
-import usersRouter from './routes/users'
 import productsRouter from './routes/products'
+import brandsRouter from './routes/brands'
 import authRouter from './routes/auth'
 
 import configureSession from './config/session'
@@ -33,8 +33,8 @@ app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
 
 app.use('/', indexRouter)
-app.use('/users', usersRouter)
 app.use('/products', productsRouter)
+app.use('/brands', brandsRouter)
 app.use('/auth', authRouter)
 
 // catch 404 and forward to error handler
