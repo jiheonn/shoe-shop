@@ -34,15 +34,15 @@
         <li class="nav-item">
           <a class="nav-link" href="/">Home</a>
         </li>
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <a class="nav-link" href="about.html">About</a>
-        </li>
+        </li> -->
         <li class="nav-item">
           <a class="nav-link" href="/products">Product</a>
         </li>
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <a class="nav-link" href="blog-grid.html">Blog</a>
-        </li>
+        </li> -->
         <li class="nav-item dropdown">
           <a
             class="nav-link dropdown-toggle"
@@ -53,15 +53,16 @@
             aria-haspopup="true"
             aria-expanded="false"
           >
-            Pages
+            Brand
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="property-single.html"
-              >Property Single</a
+            <% for (brand of brandList) { %>
+            <a
+              class="dropdown-item"
+              href="/brands/<%= brand.b_id %>?b_name=<%= brand.b_name %>"
+              ><%= brand.b_name %></a
             >
-            <a class="dropdown-item" href="blog-single.html">Blog Single</a>
-            <a class="dropdown-item" href="agents-grid.html">Agents Grid</a>
-            <a class="dropdown-item" href="agent-single.html">Agent Single</a>
+            <% } %>
           </div>
         </li>
         <!-- <li class="nav-item">
@@ -85,7 +86,9 @@
         <% } %>
       </ul>
     </div>
-    <button
+
+    <!-- 검색 폼 활성화 -->
+    <!-- <button
       type="button"
       class="btn btn-b-n navbar-toggle-box-collapse d-none d-md-block"
       data-toggle="collapse"
@@ -93,7 +96,7 @@
       aria-expanded="false"
     >
       <span class="fa fa-search" aria-hidden="true"></span>
-    </button>
+    </button> -->
   </div>
 </nav>
 <!--/ Nav End /-->
