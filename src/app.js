@@ -10,6 +10,7 @@ import indexRouter from './routes/index'
 import productsRouter from './routes/products'
 import brandsRouter from './routes/brands'
 import authRouter from './routes/auth'
+import adminRouter from './routes/admin/admin'
 
 import configureSession from './config/session'
 import configurePassport from './config/passport'
@@ -36,6 +37,7 @@ app.use('/', indexRouter)
 app.use('/products', productsRouter)
 app.use('/brands', brandsRouter)
 app.use('/auth', authRouter)
+app.use('/admin', adminRouter)
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
