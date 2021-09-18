@@ -1,21 +1,17 @@
 import express from 'express'
+
 import passport from 'passport'
+import { isLoggedIn, isNotLoggedIn } from '../middlewares/login'
+import ctrl from '../controllers/auth.ctrl'
 
 const router = express.Router()
 
 /* /auth */
-router.get('/login', (req, res) => {
-  if (req.user) {
-    res.redirect('/')
-  }
-
-  const message = req.flash('error')
-
-  res.render('login', { message })
-})
+router.get('/login', isNotLoggedIn, ctrl.index)
 
 router.post(
   '/login',
+  isNotLoggedIn,
   passport.authenticate('local', {
     successRedirect: '/',
     failureRedirect: '/auth/login',
@@ -23,13 +19,6 @@ router.post(
   })
 )
 
-router.get('/logout', (req, res) => {
-  req.session.destroy(err => {
-    if (err) throw err
-
-    req.logout()
-    res.redirect('/')
-  })
-})
+router.get('/logout', isLoggedIn, ctrl.logout)
 
 export default router
