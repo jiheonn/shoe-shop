@@ -1,5 +1,7 @@
 module.exports = {
-  presets: ["@babel/env"],
+  presets: ['@babel/env'],
   plugins:
-    process.env.NODE_ENV === "production" ? ["transform-remove-console"] : [],
-};
+    process.env.NODE_ENV === 'production'
+      ? ['transform-remove-console', '@babel/plugin-transform-runtime']
+      : ['@babel/plugin-transform-runtime'],
+}
