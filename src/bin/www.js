@@ -74,11 +74,6 @@ const onListening = () => {
 /**
  * Listen on provided port, on all network interfaces.
  */
-const listeningServer = server.listen(port, () => {
-  if (process.send) {
-    process.send('ready')
-  }
-})
 
 let isDisableKeepAlive = false
 app.use((req, res, next) => {
@@ -86,6 +81,12 @@ app.use((req, res, next) => {
     res.set('Connection', 'close')
   }
   next()
+})
+
+const listeningServer = server.listen(port, () => {
+  if (process.send) {
+    process.send('ready')
+  }
 })
 
 process.on('SIGINT', () => {
