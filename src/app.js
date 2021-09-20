@@ -7,10 +7,9 @@ import dotenv from 'dotenv'
 import flash from 'connect-flash'
 
 import indexRouter from './routes/index'
-import productsRouter from './routes/products'
-import brandsRouter from './routes/brands'
+import productRouter from './routes/product'
+import brandRouter from './routes/brand'
 import authRouter from './routes/auth'
-import adminRouter from './routes/admin/admin'
 
 import configureSession from './config/session'
 import configurePassport from './config/passport'
@@ -34,10 +33,9 @@ app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
 
 app.use('/', indexRouter)
-app.use('/products', productsRouter)
-app.use('/brands', brandsRouter)
+app.use('/products', productRouter)
+app.use('/brands', brandRouter)
 app.use('/auth', authRouter)
-app.use('/admin', adminRouter)
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
