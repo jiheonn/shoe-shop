@@ -1,13 +1,13 @@
 import express from 'express'
-
 import passport from 'passport'
-import { isLoggedIn, isNotLoggedIn } from '../middlewares/login'
-import ctrl from '../controllers/auth.ctrl'
+
+import authController from '../controllers/auth'
+import { isLoggedIn, isNotLoggedIn } from '../middlewares/auth'
 
 const router = express.Router()
 
 /* /auth */
-router.get('/login', isNotLoggedIn, ctrl.index)
+router.get('/login', isNotLoggedIn, authController.displayLogin)
 
 router.post(
   '/login',
@@ -19,6 +19,6 @@ router.post(
   })
 )
 
-router.get('/logout', isLoggedIn, ctrl.logout)
+router.get('/logout', isLoggedIn, authController.logout)
 
 export default router

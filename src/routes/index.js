@@ -1,9 +1,10 @@
 import express from 'express'
-import ctrl from '../controllers/index.ctrl'
+
+import indexController from '../controllers/index'
 
 const router = express.Router()
 
 /* GET home page. */
-router.get('/', ctrl.index)
+router.get('/', indexController.displayIndex)
 
 export default router
