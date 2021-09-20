@@ -10,7 +10,7 @@
         <div class="row">
           <div class="col-md-12 col-lg-8">
             <div class="title-single-box">
-              <h1 class="title-single">Products</h1>
+              <h1 class="title-single">Product</h1>
               <span class="color-text-a">Shoes</span>
             </div>
           </div>
@@ -41,7 +41,7 @@
           <div class="col-sm-12">
             <div class="grid-option">
               <form>
-                <select id="product_order" class="custom-select">
+                <select id="product_sort" class="custom-select">
                   <option value="regist" selected>등록순</option>
                   <option value="popular">인기순</option>
                   <option value="review">리뷰순</option>
@@ -214,16 +214,16 @@
         `)
       }
 
-      $(document).on('change', '#product_order', e => {
-        const order_type = e.target.value
+      $(document).on('change', '#product_sort', e => {
+        const sort_type = e.target.value
 
         $.ajax({
-          url: `/products/order?order_type=${order_type}`,
+          url: `/products/sort?sort_type=${sort_type}`,
           method: 'GET',
           success: data => {
             $('#product_list').empty()
 
-            for (const product of data.orderedProductList) {
+            for (const product of data.sortedProductList) {
               appendProduct(product)
             }
           },
