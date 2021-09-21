@@ -3,7 +3,7 @@ module.exports = {
     {
       name: 'app',
       script: './dist/bin/www.js',
-      instances: 4,
+      instances: 0,
       exec_mode: 'cluster',
       wait_ready: true,
       listen_timeout: 50000,
