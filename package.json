@@ -6,7 +6,8 @@
   "private": true,
   "scripts": {
     "dev": "nodemon --exec ts-node src/bin/www.ts",
-    "build": "tsc",
+    "copyfiles": "cp -r src/public/ dist/public/ && cp -r src/views/ dist/views/",
+    "build": "tsc && npm run copyfiles",
     "start": "pm2 start ecosystem.config.js"
   },
   "husky": {
@@ -15,7 +16,7 @@
     }
   },
   "lint-staged": {
-    "./src/**/*.js": [
+    "src/**/*.ts": [
       "eslint --fix",
       "prettier --write"
     ]
