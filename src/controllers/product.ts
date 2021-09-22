@@ -1,7 +1,16 @@
+import * as express from 'express'
+
 import formater from '../format/formater'
 import db_querys from '../db/querys'
 
-const getProducts = async (req, res) => {
+// TODO: types 분리 필요
+declare module 'express' {
+  export interface Request {
+    user: any
+  }
+}
+
+const getProducts = async (req: express.Request, res: express.Response) => {
   const username = req.user ? req.user.u_name : ''
 
   const rows = await db_querys.selectProductList()
@@ -12,7 +21,10 @@ const getProducts = async (req, res) => {
 
   res.render('products', { username, productList, brandList, categoryList })
 }
-const getSortedProducts = async (req, res) => {
+const getSortedProducts = async (
+  req: express.Request,
+  res: express.Response
+) => {
   const { sort_type } = req.query
 
   let rows
@@ -31,7 +43,10 @@ const getSortedProducts = async (req, res) => {
     sortedProductList: formater.productInfoFormat(rows),
   })
 }
-const getFilteredProducts = async (req, res) => {
+const getFilteredProducts = async (
+  req: express.Request,
+  res: express.Response
+) => {
   const { brand, category, p_type } = req.query
 
   const rows = await db_querys.productFilter(brand, category, p_type)
@@ -40,7 +55,10 @@ const getFilteredProducts = async (req, res) => {
     filteredProductList: formater.productInfoFormat(rows),
   })
 }
-const getProductDetails = async (req, res) => {
+const getProductDetails = async (
+  req: express.Request,
+  res: express.Response
+) => {
   const username = req.user ? req.user.u_name : ''
 
   const { p_id } = req.params
@@ -53,6 +71,8 @@ const getProductDetails = async (req, res) => {
   const productColors = await db_querys.selectProductColors(p_id)
 
   const productReview = await db_querys.selectProductReview(p_id)
+  // TODO: productReview type
+  // @ts-ignore
   const review_count = productReview.length
 
   const productLike = await db_querys.selectProductLike(p_id)
@@ -77,14 +97,14 @@ const getProductDetails = async (req, res) => {
     productUserLike,
   })
 }
-const getProductSizes = async (req, res) => {
+const getProductSizes = async (req: express.Request, res: express.Response) => {
   const { p_id } = req.params
   const { p_color } = req.query
 
   const productSizes = await db_querys.selectProductSize(p_id, p_color)
   res.send(productSizes)
 }
-const updateLike = async (req, res) => {
+const updateLike = async (req: express.Request, res: express.Response) => {
   const { p_id } = req.params
   const { u_id, like_status } = req.body
 
@@ -98,7 +118,7 @@ const updateLike = async (req, res) => {
 
   res.send({ status: 'success' })
 }
-const insertReview = async (req, res) => {
+const insertReview = async (req: express.Request, res: express.Response) => {
   const { p_id } = req.params
   const { u_id, r_contents } = req.body
 
@@ -106,14 +126,14 @@ const insertReview = async (req, res) => {
 
   res.redirect(`/products/${p_id}`)
 }
-const updateReview = async (req, res) => {
+const updateReview = async (req: express.Request, res: express.Response) => {
   const { r_contents, r_id } = req.body
 
   await db_querys.updateProductReview(r_contents, r_id)
 
   res.send({ status: 'success' })
 }
-const deleteReview = async (req, res) => {
+const deleteReview = async (req: express.Request, res: express.Response) => {
   const { r_id } = req.body
 
   await db_querys.deleteProductReview(r_id)

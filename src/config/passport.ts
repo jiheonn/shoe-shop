@@ -1,6 +1,13 @@
-import passport from 'passport'
+import * as passport from 'passport'
 import { Strategy as LocalStrategy } from 'passport-local'
 import db_querys from '../db/querys'
+
+// TODO: types 분리 필요
+declare module 'express' {
+  export interface Request {
+    user: any
+  }
+}
 
 export default app => {
   app.use(passport.initialize())
@@ -39,6 +46,7 @@ export default app => {
             done(null, false, { message: '존재하지 않는 아이디입니다.' })
           }
           // 비밀번호가 일치하지 않는 경우
+          // @ts-ignore
           if (user.u_pw !== pw) {
             done(null, false, {
               message: '비밀번호가 일치하지 않습니다.',

@@ -1,6 +1,6 @@
-import session from 'express-session'
-import sessionStore from 'express-mysql-session'
-import dotenv from 'dotenv'
+import * as session from 'express-session'
+import * as sessionStore from 'express-mysql-session'
+import * as dotenv from 'dotenv'
 
 dotenv.config()
 

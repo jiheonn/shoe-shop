@@ -2,7 +2,7 @@
  * Module dependencies.
  */
 
-import http from 'http'
+import { createServer } from 'http'
 import app from '../app'
 
 /**
@@ -35,7 +35,7 @@ app.set('port', port)
  * Create HTTP server.
  */
 
-const server = http.createServer(app)
+const server = createServer(app)
 
 /**
  * Event listener for HTTP server "error" event.

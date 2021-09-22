@@ -1,4 +1,4 @@
-import moment from 'moment'
+import * as moment from 'moment'
 
 const dateFormat = date => {
   return moment(date).format('YYYY-MM-DD')

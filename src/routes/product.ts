@@ -1,4 +1,4 @@
-import express from 'express'
+import * as express from 'express'
 
 import productController from '../controllers/product'
 import { isLoggedIn } from '../middlewares/auth'

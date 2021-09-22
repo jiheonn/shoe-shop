@@ -1,10 +1,10 @@
-import createError from 'http-errors'
-import express from 'express'
-import path from 'path'
-import cookieParser from 'cookie-parser'
-import logger from 'morgan'
-import dotenv from 'dotenv'
-import flash from 'connect-flash'
+import * as createError from 'http-errors'
+import * as express from 'express'
+import * as path from 'path'
+import * as cookieParser from 'cookie-parser'
+import * as logger from 'morgan'
+import * as dotenv from 'dotenv'
+import * as flash from 'connect-flash'
 
 import indexRouter from './routes/index'
 import productRouter from './routes/product'
@@ -38,12 +38,14 @@ app.use('/brands', brandRouter)
 app.use('/auth', authRouter)
 
 // catch 404 and forward to error handler
-app.use((req, res, next) => {
-  next(createError(404))
-})
+app.use(
+  (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    next(createError(404))
+  }
+)
 
 // error handler
-app.use((err, req, res) => {
+app.use((err: any, req: express.Request, res: express.Response) => {
   // set locals, only providing error in development
   res.locals.message = err.message
   res.locals.error = req.app.get('env') === 'development' ? err : {}
