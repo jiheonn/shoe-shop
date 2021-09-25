@@ -41,7 +41,7 @@ app.use('/auth', authRouter)
 app.use(
   (req: express.Request, res: express.Response, next: express.NextFunction) => {
     next(createError(404))
-  }
+  },
 )
 
 // error handler

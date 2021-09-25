@@ -23,7 +23,7 @@ const getProducts = async (req: express.Request, res: express.Response) => {
 }
 const getSortedProducts = async (
   req: express.Request,
-  res: express.Response
+  res: express.Response,
 ) => {
   const { sort_type } = req.query
 
@@ -45,7 +45,7 @@ const getSortedProducts = async (
 }
 const getFilteredProducts = async (
   req: express.Request,
-  res: express.Response
+  res: express.Response,
 ) => {
   const { brand, category, p_type } = req.query
 
@@ -57,7 +57,7 @@ const getFilteredProducts = async (
 }
 const getProductDetails = async (
   req: express.Request,
-  res: express.Response
+  res: express.Response,
 ) => {
   const username = req.user ? req.user.u_name : ''
 

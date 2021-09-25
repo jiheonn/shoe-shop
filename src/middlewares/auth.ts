@@ -10,7 +10,7 @@ declare module 'express' {
 export const isLoggedIn = (
   req: express.Request,
   res: express.Response,
-  next: express.NextFunction
+  next: express.NextFunction,
 ) => {
   if (req.isAuthenticated()) {
     next()
@@ -22,7 +22,7 @@ export const isLoggedIn = (
 export const isNotLoggedIn = (
   req: express.Request,
   res: express.Response,
-  next: express.NextFunction
+  next: express.NextFunction,
 ) => {
   if (!req.isAuthenticated()) {
     next()

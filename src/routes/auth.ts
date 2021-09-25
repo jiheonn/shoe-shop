@@ -16,7 +16,7 @@ router.post(
     successRedirect: '/',
     failureRedirect: '/auth/login',
     failureFlash: true,
-  })
+  }),
 )
 
 router.get('/logout', isLoggedIn, authController.logout)
