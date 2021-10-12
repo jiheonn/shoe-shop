@@ -3,8 +3,9 @@ module.exports = {
     await queryInterface.createTable('product', {
       id: {
         allowNull: false,
+        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.STRING,
+        type: Sequelize.INTEGER,
       },
       brand_id: {
         allowNull: false,
@@ -23,6 +24,11 @@ module.exports = {
           key: 'id',
         },
         onDelete: 'cascade',
+      },
+      code: {
+        allowNull: false,
+        unique: true,
+        type: Sequelize.STRING,
       },
       name: {
         allowNull: false,

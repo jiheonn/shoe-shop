@@ -4,9 +4,10 @@ module.exports = {
       'product',
       [
         {
-          id: '921826-101',
+          id: 1,
           brand_id: 1,
           category_id: 1,
+          code: '921826-101',
           name: '나이키 에어맥스 97 OG',
           price: 159200,
           description:
@@ -17,9 +18,10 @@ module.exports = {
           updatedAt: new Date(2018, 1, 18),
         },
         {
-          id: 'AQ0021',
+          id: 2,
           brand_id: 2,
           category_id: 3,
+          code: 'AQ0021',
           name: '아디다스 하든 LS 2 버클',
           price: 58780,
           description:
@@ -30,9 +32,10 @@ module.exports = {
           updatedAt: new Date(2018, 7, 21),
         },
         {
-          id: 'AR4494-003',
+          id: 3,
           brand_id: 1,
           category_id: 2,
+          code: 'AR4494-003',
           name: '나이키 울트라 컴포트 3',
           price: 49000,
           description: 'NIKE ULTRA COMFORT 3 SLIDE',
@@ -42,9 +45,10 @@ module.exports = {
           updatedAt: new Date(2020, 5, 25),
         },
         {
-          id: 'BA8775',
+          id: 4,
           brand_id: 2,
           category_id: 2,
+          code: 'BA8775',
           name: '아디다스 알파바운스 슬라이드',
           price: 32380,
           description:
@@ -55,9 +59,10 @@ module.exports = {
           updatedAt: new Date(2017, 2, 21),
         },
         {
-          id: 'CN9675-005',
+          id: 5,
           brand_id: 1,
           category_id: 2,
+          code: 'CN9675-005',
           name: '나이키 빅토리 원 슬라이드',
           price: 36000,
           description:
@@ -68,9 +73,10 @@ module.exports = {
           updatedAt: new Date(2021, 0, 21),
         },
         {
-          id: 'CV1001-107',
+          id: 6,
           brand_id: 1,
           category_id: 3,
+          code: 'CV1001-107',
           name: '나이키 줌 머큐리얼 베이퍼 14 프로 TF',
           price: 117900,
           description:
@@ -81,9 +87,10 @@ module.exports = {
           updatedAt: new Date(2021, 3, 12),
         },
         {
-          id: 'CW6062-300',
+          id: 7,
           brand_id: 1,
           category_id: 1,
+          code: 'CW6062-300',
           name: '나이키 에어 줌 테라 카이거 7',
           price: 159000,
           description:
@@ -94,9 +101,10 @@ module.exports = {
           updatedAt: new Date(2021, 4, 7),
         },
         {
-          id: 'DXSH5B131-KA',
+          id: 8,
           brand_id: 3,
           category_id: 2,
+          code: 'DXSH5B131-KA',
           name: '디스커버리 익스페디션 텐션 슬라이드',
           price: 49000,
           description: '편안한 쿠셔닝과 트렌디함 리커버리 샌들',
@@ -106,9 +114,10 @@ module.exports = {
           updatedAt: new Date(2021, 4, 29),
         },
         {
-          id: 'DXSH70031-NY',
+          id: 9,
           brand_id: 3,
           category_id: 2,
+          code: 'DXSH70031-NY',
           name: '디스커버리 익스페디션 샌드라인 3',
           price: 34990,
           description: '심플하고 이쁜 디스커버리 슬리퍼',
@@ -118,9 +127,10 @@ module.exports = {
           updatedAt: new Date(2021, 0, 12),
         },
         {
-          id: 'DXSHA1011-WH',
+          id: 10,
           brand_id: 3,
           category_id: 1,
+          code: 'DXSHA1011-WH',
           name: '디스커버리 익스페디션 버킷 디워커 V2',
           price: 138600,
           description: '편안하고 안정적인 데일리 운동화',
@@ -130,9 +140,10 @@ module.exports = {
           updatedAt: new Date(2019, 11, 13),
         },
         {
-          id: 'DXSHE2031-MU',
+          id: 11,
           brand_id: 3,
           category_id: 1,
+          code: 'DXSHE2031-MU',
           name: '디스커버리 익스페디션 비글 V2',
           price: 112000,
           description: '화창한 날의 러닝에 이상적인 쾌적하고 세련된 슈즈',
@@ -142,9 +153,10 @@ module.exports = {
           updatedAt: new Date(2020, 0, 19),
         },
         {
-          id: 'FY6045',
+          id: 12,
           brand_id: 2,
           category_id: 2,
+          code: 'FY6045',
           name: '아디다스 아딜렛 크록',
           price: 21880,
           description:
@@ -155,9 +167,10 @@ module.exports = {
           updatedAt: new Date(2021, 2, 21),
         },
         {
-          id: 'GZ3461',
+          id: 13,
           brand_id: 2,
           category_id: 1,
+          code: 'GZ3461',
           name: '아디다스 알파바운스 TD',
           price: 39900,
           description: '아디다스만의 심플함이 담긴 운동화',
@@ -167,9 +180,10 @@ module.exports = {
           updatedAt: new Date(2021, 5, 30),
         },
         {
-          id: 'H04269',
+          id: 14,
           brand_id: 2,
           category_id: 1,
+          code: 'H04269',
           name: '아디다스 오젤리아 W',
           price: 70000,
           description: '아디다스의 신상 어글리 슈즈',

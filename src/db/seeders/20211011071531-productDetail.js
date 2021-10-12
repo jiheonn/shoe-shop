@@ -4,7 +4,7 @@ module.exports = {
       'product_detail',
       [
         {
-          product_id: 'CN9675-005',
+          product_id: 5,
           size: '250',
           color: 'black-white',
           stock: 7,
@@ -12,7 +12,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          product_id: 'CN9675-005',
+          product_id: 5,
           size: '260',
           color: 'black-white',
           stock: 0,
@@ -20,7 +20,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          product_id: 'CN9675-005',
+          product_id: 5,
           size: '270',
           color: 'black-white',
           stock: 1,
@@ -28,7 +28,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          product_id: 'AR4494-003',
+          product_id: 3,
           size: '260',
           color: 'black',
           stock: 11,
@@ -36,7 +36,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          product_id: 'AR4494-003',
+          product_id: 3,
           size: '270',
           color: 'black',
           stock: 32,
@@ -44,7 +44,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          product_id: 'AR4494-003',
+          product_id: 3,
           size: '280',
           color: 'black',
           stock: 21,
@@ -52,7 +52,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          product_id: 'CW6062-300',
+          product_id: 7,
           size: '220',
           color: 'yellow-blue',
           stock: 12,
@@ -60,7 +60,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          product_id: 'CW6062-300',
+          product_id: 7,
           size: '230',
           color: 'yellow-blue',
           stock: 2,
@@ -68,7 +68,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          product_id: 'CW6062-300',
+          product_id: 7,
           size: '240',
           color: 'yellow-blue',
           stock: 7,
@@ -76,7 +76,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          product_id: '921826-101',
+          product_id: 1,
           size: '240',
           color: 'white',
           stock: 3,
@@ -84,7 +84,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          product_id: '921826-101',
+          product_id: 1,
           size: '250',
           color: 'white',
           stock: 12,
@@ -92,7 +92,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          product_id: '921826-101',
+          product_id: 1,
           size: '260',
           color: 'white',
           stock: 21,
@@ -100,7 +100,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          product_id: '921826-101',
+          product_id: 1,
           size: '270',
           color: 'white',
           stock: 10,
@@ -108,7 +108,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          product_id: 'CV1001-107',
+          product_id: 6,
           size: '260',
           color: 'green',
           stock: 3,
@@ -116,7 +116,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          product_id: 'CV1001-107',
+          product_id: 6,
           size: '270',
           color: 'green',
           stock: 6,
@@ -124,7 +124,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          product_id: 'GZ3461',
+          product_id: 13,
           size: '250',
           color: 'white-black',
           stock: 4,
@@ -132,7 +132,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          product_id: 'GZ3461',
+          product_id: 13,
           size: '260',
           color: 'white-black',
           stock: 5,
@@ -140,7 +140,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          product_id: 'H04269',
+          product_id: 14,
           size: '220',
           color: 'white',
           stock: 8,
@@ -148,7 +148,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          product_id: 'H04269',
+          product_id: 14,
           size: '230',
           color: 'white',
           stock: 0,
@@ -156,7 +156,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          product_id: 'BA8775',
+          product_id: 4,
           size: '250',
           color: 'white-black',
           stock: 3,
@@ -164,7 +164,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          product_id: 'BA8775',
+          product_id: 4,
           size: '260',
           color: 'white-black',
           stock: 2,
@@ -172,7 +172,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          product_id: 'AQ0021',
+          product_id: 2,
           size: '260',
           color: 'white-orange',
           stock: 7,
@@ -180,7 +180,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          product_id: 'AQ0021',
+          product_id: 2,
           size: '270',
           color: 'white-orange',
           stock: 8,
@@ -188,7 +188,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          product_id: 'FY6045',
+          product_id: 12,
           size: '230',
           color: 'pink',
           stock: 3,
@@ -196,7 +196,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          product_id: 'FY6045',
+          product_id: 12,
           size: '240',
           color: 'pink',
           stock: 1,
@@ -204,7 +204,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          product_id: 'DXSHA1011-WH',
+          product_id: 10,
           size: '250',
           color: 'white',
           stock: 2,
@@ -212,7 +212,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          product_id: 'DXSHA1011-WH',
+          product_id: 10,
           size: '260',
           color: 'white',
           stock: 31,
@@ -220,7 +220,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          product_id: 'DXSHE2031-MU',
+          product_id: 11,
           size: '260',
           color: 'white',
           stock: 0,
@@ -228,7 +228,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          product_id: 'DXSHE2031-MU',
+          product_id: 11,
           size: '270',
           color: 'white',
           stock: 0,
@@ -236,7 +236,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          product_id: 'DXSH5B131-KA',
+          product_id: 8,
           size: '250',
           color: 'green',
           stock: 3,
@@ -244,7 +244,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          product_id: 'DXSH5B131-KA',
+          product_id: 8,
           size: '260',
           color: 'green',
           stock: 4,
@@ -252,7 +252,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          product_id: 'DXSH70031-NY',
+          product_id: 9,
           size: '250',
           color: 'black-white',
           stock: 34,
@@ -260,7 +260,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          product_id: 'DXSH70031-NY',
+          product_id: 9,
           size: '260',
           color: 'black-white',
           stock: 6,

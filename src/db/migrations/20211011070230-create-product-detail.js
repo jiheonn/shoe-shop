@@ -3,7 +3,7 @@ module.exports = {
     await queryInterface.createTable('product_detail', {
       product_id: {
         allowNull: false,
-        type: Sequelize.STRING,
+        type: Sequelize.INTEGER,
         references: {
           model: 'product',
           key: 'id',
