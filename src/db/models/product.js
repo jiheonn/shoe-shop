@@ -19,6 +19,9 @@ module.exports = (sequelize, DataTypes) => {
       this.hasMany(models.ProductDetail, {
         onDelete: 'cascade',
       })
+      this.hasMany(models.Review, {
+        onDelete: 'cascade',
+      })
     }
   }
   Product.init(
