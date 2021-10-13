@@ -11,6 +11,12 @@ module.exports = (sequelize, DataTypes) => {
       this.hasMany(models.Review, {
         onDelete: 'cascade',
       })
+      this.hasMany(models.Order, {
+        onDelete: 'cascade',
+      })
+      this.hasMany(models.Like, {
+        onDelete: 'cascade',
+      })
     }
   }
   User.init(

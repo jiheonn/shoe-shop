@@ -22,6 +22,12 @@ module.exports = (sequelize, DataTypes) => {
       this.hasMany(models.Review, {
         onDelete: 'cascade',
       })
+      this.hasMany(models.OrderDetail, {
+        onDelete: 'cascade',
+      })
+      this.hasMany(models.Like, {
+        onDelete: 'cascade',
+      })
     }
   }
   Product.init(
