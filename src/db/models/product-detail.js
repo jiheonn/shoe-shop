@@ -1,38 +1,37 @@
 const { Model } = require('sequelize')
 
 module.exports = (sequelize, DataTypes) => {
-  class User extends Model {
+  class ProductDetail extends Model {
     static associate(models) {
-      this.hasMany(models.Review, {
-        onDelete: 'cascade',
-      })
-      this.hasMany(models.Order, {
-        onDelete: 'cascade',
-      })
-      this.hasMany(models.Like, {
+      this.belongsTo(models.Product, {
+        foreignKey: 'products_id',
         onDelete: 'cascade',
       })
     }
   }
-  User.init(
+  ProductDetail.init(
     {
-      email: {
+      products_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      size: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      password: {
+      color: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      name: {
-        type: DataTypes.STRING,
+      stock: {
+        type: DataTypes.INTEGER,
         allowNull: false,
       },
     },
     {
       sequelize,
-      modelName: 'User',
+      modelName: 'ProductDetail',
     },
   )
-  return User
+  return ProductDetail
 }
