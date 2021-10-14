@@ -1,36 +1,38 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('order', {
+    await queryInterface.createTable('likes', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      user_id: {
+      products_id: {
         allowNull: false,
         type: Sequelize.INTEGER,
         references: {
-          model: 'user',
+          model: 'products',
           key: 'id',
         },
         onDelete: 'cascade',
       },
-      amount: {
+      users_id: {
         allowNull: false,
-        type: Sequelize.DECIMAL(7, 0),
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'users',
+          key: 'id',
+        },
+        onDelete: 'cascade',
       },
-      createdAt: {
+      status: {
         allowNull: false,
-        type: Sequelize.DATE,
-      },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE,
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
       },
     })
   },
   down: async queryInterface => {
-    await queryInterface.dropTable('order')
+    await queryInterface.dropTable('likes')
   },
 }
