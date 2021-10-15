@@ -4,22 +4,26 @@ module.exports = (sequelize, DataTypes) => {
   class OrderDetail extends Model {
     static associate(models) {
       this.belongsTo(models.Order, {
-        foreignKey: 'orders_id',
+        as: 'orders',
+        foreignKey: 'orderId',
         onDelete: 'cascade',
       })
       this.belongsTo(models.Product, {
-        foreignKey: 'products_id',
+        as: 'products',
+        foreignKey: 'productId',
         onDelete: 'cascade',
       })
     }
   }
   OrderDetail.init(
     {
-      orders_id: {
+      orderId: {
+        field: 'orders_id',
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      products_id: {
+      productId: {
+        field: 'products_id',
         type: DataTypes.INTEGER,
         allowNull: false,
       },
@@ -31,7 +35,9 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: 'OrderDetail',
+      tableName: 'order_details',
     },
   )
+  OrderDetail.removeAttribute('id')
   return OrderDetail
 }

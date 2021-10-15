@@ -4,12 +4,18 @@ module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {
       this.hasMany(models.Review, {
+        as: 'reviews',
+        foreignKey: 'userId',
         onDelete: 'cascade',
       })
       this.hasMany(models.Order, {
+        as: 'orders',
+        foreignKey: 'userId',
         onDelete: 'cascade',
       })
       this.hasMany(models.Like, {
+        as: 'likes',
+        foreignKey: 'userId',
         onDelete: 'cascade',
       })
     }

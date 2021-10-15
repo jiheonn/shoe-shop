@@ -4,14 +4,16 @@ module.exports = (sequelize, DataTypes) => {
   class ProductDetail extends Model {
     static associate(models) {
       this.belongsTo(models.Product, {
-        foreignKey: 'products_id',
+        as: 'products',
+        foreignKey: 'productId',
         onDelete: 'cascade',
       })
     }
   }
   ProductDetail.init(
     {
-      products_id: {
+      productId: {
+        field: 'products_id',
         type: DataTypes.INTEGER,
         allowNull: false,
       },
@@ -31,7 +33,9 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: 'ProductDetail',
+      tableName: 'product_details',
     },
   )
+  ProductDetail.removeAttribute('id')
   return ProductDetail
 }

@@ -4,17 +4,21 @@ module.exports = (sequelize, DataTypes) => {
   class Order extends Model {
     static associate(models) {
       this.belongsTo(models.User, {
-        foreignKey: 'users_id',
+        as: 'users',
+        foreignKey: 'userId',
         onDelete: 'cascade',
       })
       this.hasMany(models.OrderDetail, {
+        as: 'orderDetails',
+        foreignKey: 'orderId',
         onDelete: 'cascade',
       })
     }
   }
   Order.init(
     {
-      users_id: {
+      userId: {
+        field: 'users_id',
         type: DataTypes.INTEGER,
         allowNull: false,
       },
@@ -22,7 +26,8 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.DECIMAL(7, 0),
         allowNull: false,
       },
-      order_date: {
+      orderDate: {
+        field: 'order_date',
         type: DataTypes.DATE,
         allowNull: false,
       },

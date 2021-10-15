@@ -4,34 +4,46 @@ module.exports = (sequelize, DataTypes) => {
   class Product extends Model {
     static associate(models) {
       this.belongsTo(models.Brand, {
-        foreignKey: 'brands_id',
+        as: 'brands',
+        foreignKey: 'brandId',
         onDelete: 'cascade',
       })
       this.belongsTo(models.Category, {
-        foreignKey: 'categories_id',
+        as: 'categories',
+        foreignKey: 'categoryId',
         onDelete: 'cascade',
       })
       this.hasMany(models.ProductDetail, {
+        as: 'productDetails',
+        foreignKey: 'productId',
         onDelete: 'cascade',
       })
       this.hasMany(models.Review, {
+        as: 'reviews',
+        foreignKey: 'productId',
         onDelete: 'cascade',
       })
       this.hasMany(models.OrderDetail, {
+        as: 'orderDetails',
+        foreignKey: 'productId',
         onDelete: 'cascade',
       })
       this.hasMany(models.Like, {
+        as: 'likes',
+        foreignKey: 'productId',
         onDelete: 'cascade',
       })
     }
   }
   Product.init(
     {
-      brands_id: {
+      brandId: {
+        field: 'brands_id',
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      categorires_id: {
+      categoryId: {
+        field: 'categories_id',
         type: DataTypes.INTEGER,
         allowNull: false,
       },
@@ -59,7 +71,8 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      registration_date: {
+      registrationDate: {
+        field: 'registration_date',
         type: DataTypes.DATE,
         allowNull: false,
       },

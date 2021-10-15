@@ -4,22 +4,26 @@ module.exports = (sequelize, DataTypes) => {
   class Review extends Model {
     static associate(models) {
       this.belongsTo(models.Product, {
-        foreignKey: 'products_id',
+        as: 'products',
+        foreignKey: 'productId',
         onDelete: 'cascade',
       })
       this.belongsTo(models.User, {
-        foreignKey: 'users_id',
+        as: 'users',
+        foreignKey: 'userId',
         onDelete: 'cascade',
       })
     }
   }
   Review.init(
     {
-      products_id: {
+      productId: {
+        field: 'products_id',
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      users_id: {
+      userId: {
+        field: 'users_id',
         type: DataTypes.INTEGER,
         allowNull: false,
       },
