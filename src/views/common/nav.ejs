@@ -50,11 +50,11 @@
             Brand
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <% for (brand of brandList) { %>
+            <% for (brand of brands) { %>
             <a
               class="dropdown-item"
-              href="/brands/<%= brand.b_id %>?b_name=<%= brand.b_name %>"
-              ><%= brand.b_name %></a
+              href="/brands/<%= brand.id %>?b_name=<%= brand.name %>"
+              ><%= brand.name %></a
             >
             <% } %>
           </div>

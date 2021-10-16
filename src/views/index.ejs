@@ -75,12 +75,12 @@
           </div>
         </div>
         <div id="property-carousel" class="owl-carousel owl-theme">
-          <% for (product of latestedShoes6) { %>
+          <% for (product of recentProducts) { %>
           <div class="carousel-item-b">
             <div class="card-box-a card-shadow">
               <div class="img-box-a">
                 <img
-                  src="<%= product.p_image %>"
+                  src="<%= product.image %>"
                   alt=""
                   class="img-a img-fluid"
                 />
@@ -89,16 +89,16 @@
                 <div class="card-overlay-a-content">
                   <div class="card-header-a">
                     <h2 class="card-title-a">
-                      <a href="/products/<%= product.p_id %>"
-                        ><%= product.p_name %></a
+                      <a href="/products/<%= product.id %>"
+                        ><%= product.name %></a
                       >
                     </h2>
                   </div>
                   <div class="card-body-a">
                     <div class="price-box d-flex">
-                      <span class="price-a">$ <%= product.p_price %></span>
+                      <span class="price-a">$ <%= product.price %></span>
                     </div>
-                    <a href="/products/<%= product.p_id %>" class="link-a"
+                    <a href="/products/<%= product.id %>" class="link-a"
                       >Click here to view
                       <span class="ion-ios-arrow-forward"></span>
                     </a>
@@ -107,11 +107,11 @@
                     <ul class="card-info d-flex justify-content-around">
                       <li>
                         <h4 class="card-info-title">등록일</h4>
-                        <span><%= product.p_reg_date %></span>
+                        <span><%= product.registrationDate %></span>
                       </li>
                       <li>
                         <h4 class="card-info-title">상품타입</h4>
-                        <span><%= product.p_type %></span>
+                        <span><%= product.type %></span>
                       </li>
                     </ul>
                   </div>
@@ -144,12 +144,12 @@
           </div>
         </div>
         <div id="new-carousel" class="owl-carousel owl-theme">
-          <% for (product of popularShoes6) { %>
+          <% for (product of popularProducts) { %>
           <div class="carousel-item-c">
             <div class="card-box-b card-shadow news-box">
               <div class="img-box-b">
                 <img
-                  src="<%= product.p_image %>"
+                  src="<%= product.image %>"
                   alt=""
                   class="img-b img-fluid"
                 />
@@ -158,18 +158,18 @@
                 <div class="card-header-b">
                   <div class="card-category-b">
                     <a href="#" class="category-b"
-                      >Buy +<%= product.p_order_count %></a
+                      >Buy +<%= product.totalNumberOrders %></a
                     >
                   </div>
                   <div class="card-title-b">
                     <h2 class="title-2">
-                      <a href="/products/<%= product.p_id %>"
-                        ><%= product.p_name %></a
+                      <a href="/products/<%= product.id %>"
+                        ><%= product.name %></a
                       >
                     </h2>
                   </div>
                   <div class="card-date">
-                    <a href="/products/<%= product.p_id %>" class="link-a"
+                    <a href="/products/<%= product.id %>" class="link-a"
                       >Click here to view
                       <span class="ion-ios-arrow-forward"></span>
                     </a>
