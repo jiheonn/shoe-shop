@@ -1,19 +1,50 @@
-import db_querys from '../db/querys'
-import formater from '../format/formater'
+import * as express from 'express'
+import * as sequelize from 'sequelize'
 
-const displayIndex = async (req, res) => {
-  const username = req.user ? req.user.u_name : ''
+import { Product, Brand, OrderDetail } from '../db/models'
+import { formatProductInfo } from '../format'
 
-  const latestedShoes6 = await db_querys.selectLatestLimit6()
-  const popularShoes6 = await db_querys.selectPopularLimit6()
+const displayIndex = async (req: express.Request, res: express.Response) => {
+  const username = req.user ? req.user.name : ''
 
-  const brandList = await db_querys.selectBrandList()
+  const recentProducts = await Product.findAll({
+    order: [['registrationDate', 'DESC']],
+    limit: 6,
+    raw: true,
+  })
+
+  let popularProducts = await Product.findAll({
+    attributes: {
+      include: [
+        [
+          sequelize.fn('SUM', sequelize.col('orderDetails.quantity')),
+          'totalNumberOrders',
+        ],
+      ],
+    },
+    include: [
+      {
+        model: OrderDetail,
+        as: 'orderDetails',
+        attributes: [],
+      },
+    ],
+    group: ['Product.id'],
+    order: sequelize.literal('totalNumberOrders DESC'),
+    limit: 6,
+    subQuery: false,
+  })
+  popularProducts = popularProducts.map(el => el.get({ plain: true }))
+
+  console.log(popularProducts)
+
+  const brands = await Brand.findAll({ raw: true })
 
   res.render('index', {
     username,
-    latestedShoes6: formater.productInfoFormat(latestedShoes6),
-    popularShoes6: formater.productInfoFormat(popularShoes6),
-    brandList,
+    recentProducts: formatProductInfo(recentProducts),
+    popularProducts: formatProductInfo(popularProducts),
+    brands,
   })
 }
 
