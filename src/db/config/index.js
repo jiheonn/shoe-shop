@@ -8,6 +8,9 @@ const development = {
   database: env.DEV_DB_DATABASE,
   host: env.DEV_DB_HOST,
   dialect: env.DEV_DB_DIALECT,
+  dialectOptions: {
+    decimalNumbers: true,
+  },
   port: env.DEV_DB_PORT,
   timezone: '+09:00',
   define: {
@@ -21,6 +24,9 @@ const production = {
   database: env.PROD_DB_DATABASE,
   host: env.PROD_DB_HOST,
   dialect: env.PROD_DB_DIALECT,
+  dialectOptions: {
+    decimalNumbers: true,
+  },
   port: env.PROD_DB_PORT,
   timezone: '+09:00',
   define: {
@@ -34,6 +40,9 @@ const test = {
   database: env.TEST_DB_DATABASE,
   host: env.TEST_DB_HOST,
   dialect: env.TEST_DB_DIALECT,
+  dialectOptions: {
+    decimalNumbers: true,
+  },
   port: env.TEST_DB_PORT,
   timezone: '+09:00',
   define: {
