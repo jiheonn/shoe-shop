@@ -11,8 +11,8 @@ import productRouter from './routes/product'
 import brandRouter from './routes/brand'
 import authRouter from './routes/auth'
 
-import configureSession from './config/session'
-import configurePassport from './config/passport'
+import configureSession from './auth/session'
+import configurePassport from './auth/passport'
 
 dotenv.config()
 
