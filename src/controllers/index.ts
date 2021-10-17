@@ -36,8 +36,6 @@ const displayIndex = async (req: express.Request, res: express.Response) => {
   })
   popularProducts = popularProducts.map(el => el.get({ plain: true }))
 
-  console.log(popularProducts)
-
   const brands = await Brand.findAll({ raw: true })
 
   res.render('index', {
