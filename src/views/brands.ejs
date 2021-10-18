@@ -11,7 +11,7 @@
           <div class="col-md-12 col-lg-8">
             <div class="title-single-box">
               <h1 class="title-single">Brand</h1>
-              <span class="color-text-a"><%= b_name %></span>
+              <span class="color-text-a"><%= brandName %></span>
             </div>
           </div>
           <div class="col-md-12 col-lg-4">
@@ -46,34 +46,34 @@
                   name="product_filter"
                   style="display: none"
                 >
-                  <option value="<%= b_id %>" selected>브랜드</option>
+                  <option value="<%= brandId %>" selected>브랜드</option>
                 </select>
                 <select class="custom-select" name="product_filter">
                   <option selected>카테고리</option>
                   <option value="0">전체상품</option>
-                  <% for (category of categoryList) { %>
-                  <option value="<%= category.c_id %>">
-                    <%= category.c_name %>
+                  <% for (category of categories) { %>
+                  <option value="<%= category.id %>">
+                    <%= category.name %>
                   </option>
                   <% } %>
                 </select>
                 <select class="custom-select" name="product_filter">
                   <option selected>상품타입</option>
-                  <option value="0">남녀공용</option>
-                  <option value="1">남성용</option>
-                  <option value="2">여성용</option>
+                  <option value="남녀공용">남녀공용</option>
+                  <option value="남성용">남성용</option>
+                  <option value="여성용">여성용</option>
                 </select>
               </form>
             </div>
           </div>
         </div>
         <div id="product_list" class="row">
-          <% for (product of productList) { %>
+          <% for (product of products) { %>
           <div class="col-md-4">
             <div class="card-box-a card-shadow">
               <div class="img-box-a">
                 <img
-                  src="<%= product.p_image %>"
+                  src="<%= product.image %>"
                   alt=""
                   class="img-a img-fluid"
                 />
@@ -82,16 +82,16 @@
                 <div class="card-overlay-a-content">
                   <div class="card-header-a">
                     <h2 class="card-title-a">
-                      <a href="/products/<%= product.p_id %>"
-                        ><%= product.p_name %></a
+                      <a href="/products/<%= product.id %>"
+                        ><%= product.name %></a
                       >
                     </h2>
                   </div>
                   <div class="card-body-a">
                     <div class="price-box d-flex">
-                      <span class="price-a">$ <%= product.p_price %></span>
+                      <span class="price-a">$ <%= product.price %></span>
                     </div>
-                    <a href="/products/<%= product.p_id %>" class="link-a"
+                    <a href="/products/<%= product.id %>" class="link-a"
                       >Click here to view
                       <span class="ion-ios-arrow-forward"></span>
                     </a>
@@ -100,11 +100,11 @@
                     <ul class="card-info d-flex justify-content-around">
                       <li>
                         <h4 class="card-info-title">등록일</h4>
-                        <span><%= product.p_reg_date %></span>
+                        <span><%= product.registrationDate %></span>
                       </li>
                       <li>
                         <h4 class="card-info-title">상품타입</h4>
-                        <span><%= product.p_type %></span>
+                        <span><%= product.type %></span>
                       </li>
                     </ul>
                   </div>
