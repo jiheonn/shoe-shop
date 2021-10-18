@@ -11,15 +11,15 @@ import productRouter from './routes/product'
 import brandRouter from './routes/brand'
 import authRouter from './routes/auth'
 
-import configureSession from './auth/session'
-import configurePassport from './auth/passport'
+import sessionConfig from './auth/session'
+import passportConifg from './auth/passport'
 
 dotenv.config()
 
 const app = express()
 
-configureSession(app)
-configurePassport(app)
+sessionConfig(app)
+passportConifg(app)
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'))
