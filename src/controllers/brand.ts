@@ -1,28 +1,34 @@
-import formater from '../format/formater'
-import db_querys from '../db/querys'
+import * as express from 'express'
 
-const getBrands = async (req, res) => {
+import { Product, Brand, Category } from '../db/models'
+import { formatProductInfo } from '../format'
+
+const getBrands = async (req: express.Request, res: express.Response) => {
   const username = req.user ? req.user.u_name : ''
 
-  const { b_id } = req.params
-  const { b_name } = req.query
+  const brandId = Number.parseInt(req.params.id, 10)
 
-  const rows = await db_querys.selectBrandProduct(b_id)
-  const productList = formater.productInfoFormat(rows)
+  const products = await Product.findAll({
+    where: {
+      brandId,
+    },
+    raw: true,
+  })
 
-  const brandList = await db_querys.selectBrandList()
-  const categoryList = await db_querys.selectcategoryList()
+  const brands = await Brand.findAll({ raw: true })
+
+  const brandName = brands.filter(brand => brand.id === brandId)
+
+  const categories = await Category.findAll({ raw: true })
 
   res.render('brands', {
     username,
-    b_id,
-    b_name,
-    productList,
-    brandList,
-    categoryList,
+    brandId,
+    brandName: brandName[0].name,
+    products: formatProductInfo(products),
+    brands,
+    categories,
   })
 }
 
-export default {
-  getBrands,
-}
+export default { getBrands }
