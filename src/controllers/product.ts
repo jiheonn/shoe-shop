@@ -1,6 +1,8 @@
 import * as express from 'express'
+import * as sequelize from 'sequelize'
 
-import formater from '../format/formater'
+import { Product, Brand, Category, OrderDetail, Review } from '../db/models'
+import { formatProductInfo } from '../format'
 import db_querys from '../db/querys'
 
 // TODO: types 분리 필요
@@ -13,46 +15,123 @@ declare module 'express' {
 const getProducts = async (req: express.Request, res: express.Response) => {
   const username = req.user ? req.user.u_name : ''
 
-  const rows = await db_querys.selectProductList()
-  const productList = formater.productInfoFormat(rows)
+  const products = await Product.findAll({
+    raw: true,
+  })
 
-  const brandList = await db_querys.selectBrandList()
-  const categoryList = await db_querys.selectcategoryList()
+  const brands = await Brand.findAll({ raw: true })
 
-  res.render('products', { username, productList, brandList, categoryList })
+  const categories = await Category.findAll({ raw: true })
+
+  res.render('products', {
+    username,
+    products: formatProductInfo(products),
+    brands,
+    categories,
+  })
 }
 const getSortedProducts = async (
   req: express.Request,
   res: express.Response,
 ) => {
-  const { sort_type } = req.query
+  const { type } = req.query
 
-  let rows
+  let sortedProducts
 
-  if (sort_type === 'popular') {
-    rows = await db_querys.productOrderbyPopular()
-  } else if (sort_type === 'review') {
-    rows = await db_querys.productOrderbyReview()
-  } else if (sort_type === 'name') {
-    rows = await db_querys.productOrderbyName()
+  if (type === 'regist') {
+    sortedProducts = await Product.findAll({
+      order: [['registrationDate', 'DESC']],
+      raw: true,
+    })
+  } else if (type === 'popular') {
+    sortedProducts = await Product.findAll({
+      attributes: {
+        include: [
+          [
+            sequelize.fn('SUM', sequelize.col('orderDetails.quantity')),
+            'totalNumberOrders',
+          ],
+        ],
+      },
+      include: [
+        {
+          model: OrderDetail,
+          as: 'orderDetails',
+          attributes: [],
+        },
+      ],
+      group: ['Product.id'],
+      order: sequelize.literal('totalNumberOrders DESC'),
+      raw: true,
+    })
+  } else if (type === 'review') {
+    sortedProducts = await Product.findAll({
+      attributes: {
+        include: [
+          [
+            sequelize.fn('COUNT', sequelize.col('reviews.products_id')),
+            'totalNumberReviews',
+          ],
+        ],
+      },
+      include: [
+        {
+          model: Review,
+          as: 'reviews',
+          attributes: [],
+        },
+      ],
+      group: ['Product.id'],
+      order: sequelize.literal('totalNumberReviews DESC'),
+      raw: true,
+    })
+  } else if (type === 'name') {
+    sortedProducts = await Product.findAll({
+      order: [['name', 'ASC']],
+      raw: true,
+    })
   } else {
-    rows = await db_querys.selectProductList()
+    sortedProducts = await Product.findAll({
+      raw: true,
+    })
   }
 
   res.send({
-    sortedProductList: formater.productInfoFormat(rows),
+    sortedProducts: formatProductInfo(sortedProducts),
   })
 }
 const getFilteredProducts = async (
   req: express.Request,
   res: express.Response,
 ) => {
-  const { brand, category, p_type } = req.query
+  const { brand, category, type } = req.query
 
-  const rows = await db_querys.productFilter(brand, category, p_type)
+  console.log(brand, category, type)
+
+  const optionDefault = ['브랜드', '카테고리', '상품타입', '전체상품']
+
+  const filterOption = {}
+
+  // @ts-ignore
+  if (!optionDefault.includes(brand)) {
+    Object.assign(filterOption, { brandId: brand })
+  }
+  // @ts-ignore
+  if (!optionDefault.includes(category)) {
+    Object.assign(filterOption, { categoryId: category })
+  }
+  // @ts-ignore
+  if (!optionDefault.includes(type)) {
+    Object.assign(filterOption, { type })
+  }
+
+  const filteredProducts = await Product.findAll({
+    where: filterOption,
+    raw: true,
+  })
 
   res.send({
-    filteredProductList: formater.productInfoFormat(rows),
+    filteredProducts: formatProductInfo(filteredProducts),
   })
 }
 const getProductDetails = async (
@@ -66,7 +145,7 @@ const getProductDetails = async (
   const brandList = await db_querys.selectBrandList()
 
   const rows = await db_querys.selectProductInfo(p_id)
-  const productInfo = formater.productInfoFormat(rows)
+  const productInfo = formatProductInfo(rows)
 
   const productColors = await db_querys.selectProductColors(p_id)
 
