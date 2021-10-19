@@ -42,7 +42,8 @@
             <div class="grid-option">
               <form>
                 <select id="product_sort" class="custom-select">
-                  <option value="regist" selected>등록순</option>
+                  <option selected>상품정렬</option>
+                  <option value="regist">등록순</option>
                   <option value="popular">인기순</option>
                   <option value="review">리뷰순</option>
                   <option value="name">이름순</option>
@@ -55,37 +56,38 @@
               <form>
                 <select class="custom-select" name="product_filter">
                   <option selected>브랜드</option>
-                  <option value="0">전체상품</option>
-                  <% for (brand of brandList) { %>
-                  <option value="<%= brand.b_id %>"><%= brand.b_name %></option>
+                  <option value="전체상품">전체상품</option>
+                  <% for (brand of brands) { %>
+                  <option value="<%= brand.id %>"><%= brand.name %></option>
                   <% } %>
                 </select>
                 <select class="custom-select" name="product_filter">
                   <option selected>카테고리</option>
-                  <option value="0">전체상품</option>
-                  <% for (category of categoryList) { %>
-                  <option value="<%= category.c_id %>">
-                    <%= category.c_name %>
+                  <option value="전체상품">전체상품</option>
+                  <% for (category of categories) { %>
+                  <option value="<%= category.id %>">
+                    <%= category.name %>
                   </option>
                   <% } %>
                 </select>
                 <select class="custom-select" name="product_filter">
                   <option selected>상품타입</option>
-                  <option value="0">남녀공용</option>
-                  <option value="1">남성용</option>
-                  <option value="2">여성용</option>
+                  <option value="전체상품">전체상품</option>
+                  <option value="남녀공용">남녀공용</option>
+                  <option value="남성용">남성용</option>
+                  <option value="여성용">여성용</option>
                 </select>
               </form>
             </div>
           </div>
         </div>
         <div id="product_list" class="row">
-          <% for (product of productList) { %>
+          <% for (product of products) { %>
           <div class="col-md-4">
             <div class="card-box-a card-shadow">
               <div class="img-box-a">
                 <img
-                  src="<%= product.p_image %>"
+                  src="<%= product.image %>"
                   alt=""
                   class="img-a img-fluid"
                 />
@@ -94,16 +96,16 @@
                 <div class="card-overlay-a-content">
                   <div class="card-header-a">
                     <h2 class="card-title-a">
-                      <a href="/products/<%= product.p_id %>"
-                        ><%= product.p_name %></a
+                      <a href="/products/<%= product.id %>"
+                        ><%= product.name %></a
                       >
                     </h2>
                   </div>
                   <div class="card-body-a">
                     <div class="price-box d-flex">
-                      <span class="price-a">$ <%= product.p_price %></span>
+                      <span class="price-a">$ <%= product.price %></span>
                     </div>
-                    <a href="/products/<%= product.p_id %>" class="link-a"
+                    <a href="/products/<%= product.id %>" class="link-a"
                       >Click here to view
                       <span class="ion-ios-arrow-forward"></span>
                     </a>
@@ -112,11 +114,11 @@
                     <ul class="card-info d-flex justify-content-around">
                       <li>
                         <h4 class="card-info-title">등록일</h4>
-                        <span><%= product.p_reg_date %></span>
+                        <span><%= product.registrationDate %></span>
                       </li>
                       <li>
                         <h4 class="card-info-title">상품타입</h4>
-                        <span><%= product.p_type %></span>
+                        <span><%= product.type %></span>
                       </li>
                     </ul>
                   </div>
@@ -166,13 +168,13 @@
     <% include ./common/foot-meta.ejs %>
 
     <script>
-      const appendProduct = product => {
+      const displayProduct = product => {
         $('#product_list').append(`
           <div class="col-md-4">
             <div class="card-box-a card-shadow">
               <div class="img-box-a">
                 <img
-                  src="${product.p_image}"
+                  src="${product.image}"
                   alt=""
                   class="img-a img-fluid"
                 />
@@ -181,16 +183,16 @@
                 <div class="card-overlay-a-content">
                   <div class="card-header-a">
                     <h2 class="card-title-a">
-                      <a href="/products/${product.p_id}"
-                        >${product.p_name}</a
+                      <a href="/products/${product.id}"
+                        >${product.name}</a
                       >
                     </h2>
                   </div>
                   <div class="card-body-a">
                     <div class="price-box d-flex">
-                      <span class="price-a">$ ${product.p_price}</span>
+                      <span class="price-a">$ ${product.price}</span>
                     </div>
-                    <a href="/products/${product.p_id}" class="link-a"
+                    <a href="/products/${product.id}" class="link-a"
                       >Click here to view
                       <span class="ion-ios-arrow-forward"></span>
                     </a>
@@ -199,11 +201,11 @@
                     <ul class="card-info d-flex justify-content-around">
                       <li>
                         <h4 class="card-info-title">등록일</h4>
-                        <span>${product.p_reg_date}</span>
+                        <span>${product.registrationDate}</span>
                       </li>
                       <li>
                         <h4 class="card-info-title">상품타입</h4>
-                        <span>${product.p_type}</span>
+                        <span>${product.type}</span>
                       </li>
                     </ul>
                   </div>
@@ -215,39 +217,45 @@
       }
 
       $(document).on('change', '#product_sort', e => {
-        const sort_type = e.target.value
+        const sortType = e.target.value
 
         $.ajax({
-          url: `/products/sort?sort_type=${sort_type}`,
+          url: `/products/sort?type=${sortType}`,
           method: 'GET',
           success: data => {
             $('#product_list').empty()
 
-            for (const product of data.sortedProductList) {
-              appendProduct(product)
+            const { sortedProducts } = data
+
+            for (const product of sortedProducts) {
+              displayProduct(product)
             }
           },
         })
       })
 
       $(document).on('change', 'select[name=product_filter]', e => {
-        const filter_option = {}
+        const filterOption = {}
 
         $('select[name=product_filter] option:selected').each((idx, el) => {
-          if (idx === 0) filter_option['brand'] = el.value
-          else if (idx === 1) filter_option['category'] = el.value
-          else filter_option['p_type'] = el.value
+          if (idx === 0) filterOption['brand'] = el.value
+          else if (idx === 1) filterOption['category'] = el.value
+          else filterOption['type'] = el.value
         })
 
+        const { brand, category, type } = filterOption
+
         $.ajax({
-          url: `/products/filter?brand=${filter_option.brand}&category=${filter_option.category}&p_type=${filter_option.p_type}`,
+          url: `/products/filter?brand=${brand}&category=${category}&type=${type}`,
           method: 'GET',
           success: data => {
             $('#product_list').empty()
 
-            if (data.filteredProductList.length > 0) {
-              for (const product of data.filteredProductList) {
-                appendProduct(product)
+            const { filteredProducts } = data
+
+            if (filteredProducts.length > 0) {
+              for (const product of filteredProducts) {
+                displayProduct(product)
               }
             } else {
               $('#product_list').append(`
