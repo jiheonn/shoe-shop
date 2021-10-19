@@ -13,7 +13,7 @@ const displayIndex = async (req: express.Request, res: express.Response) => {
     raw: true,
   })
 
-  let popularProducts = await Product.findAll({
+  const popularProducts = await Product.findAll({
     attributes: {
       include: [
         [
@@ -33,8 +33,8 @@ const displayIndex = async (req: express.Request, res: express.Response) => {
     order: sequelize.literal('totalNumberOrders DESC'),
     limit: 6,
     subQuery: false,
+    raw: true,
   })
-  popularProducts = popularProducts.map(el => el.get({ plain: true }))
 
   const brands = await Brand.findAll({ raw: true })
 
