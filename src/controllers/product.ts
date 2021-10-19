@@ -30,6 +30,7 @@ const getProducts = async (req: express.Request, res: express.Response) => {
     categories,
   })
 }
+
 const getSortedProducts = async (
   req: express.Request,
   res: express.Response,
@@ -100,6 +101,7 @@ const getSortedProducts = async (
     sortedProducts: formatProductInfo(sortedProducts),
   })
 }
+
 const getFilteredProducts = async (
   req: express.Request,
   res: express.Response,
@@ -134,6 +136,7 @@ const getFilteredProducts = async (
     filteredProducts: formatProductInfo(filteredProducts),
   })
 }
+
 const getProductDetails = async (
   req: express.Request,
   res: express.Response,
@@ -176,6 +179,7 @@ const getProductDetails = async (
     productUserLike,
   })
 }
+
 const getProductSizes = async (req: express.Request, res: express.Response) => {
   const { p_id } = req.params
   const { p_color } = req.query
@@ -183,6 +187,7 @@ const getProductSizes = async (req: express.Request, res: express.Response) => {
   const productSizes = await db_querys.selectProductSize(p_id, p_color)
   res.send(productSizes)
 }
+
 const updateLike = async (req: express.Request, res: express.Response) => {
   const { p_id } = req.params
   const { u_id, like_status } = req.body
@@ -197,6 +202,7 @@ const updateLike = async (req: express.Request, res: express.Response) => {
 
   res.send({ status: 'success' })
 }
+
 const insertReview = async (req: express.Request, res: express.Response) => {
   const { p_id } = req.params
   const { u_id, r_contents } = req.body
@@ -205,6 +211,7 @@ const insertReview = async (req: express.Request, res: express.Response) => {
 
   res.redirect(`/products/${p_id}`)
 }
+
 const updateReview = async (req: express.Request, res: express.Response) => {
   const { r_contents, r_id } = req.body
 
@@ -212,6 +219,7 @@ const updateReview = async (req: express.Request, res: express.Response) => {
 
   res.send({ status: 'success' })
 }
+
 const deleteReview = async (req: express.Request, res: express.Response) => {
   const { r_id } = req.body
 

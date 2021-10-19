@@ -12,6 +12,7 @@ const displayLogin = (req: express.Request, res: express.Response) => {
   const message = req.flash('error')
   res.render('login', { message })
 }
+
 const logout = (req: express.Request, res: express.Response) => {
   req.session.destroy()
   res.redirect('/')
