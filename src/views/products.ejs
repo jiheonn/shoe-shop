@@ -41,10 +41,10 @@
           <div class="col-sm-12">
             <div class="grid-option">
               <form>
-                <select id="product_sort" class="custom-select">
+                <select class="custom-select" name="product_sort">
                   <option selected>상품정렬</option>
-                  <option value="regist">등록순</option>
-                  <option value="popular">인기순</option>
+                  <option value="registration">등록순</option>
+                  <option value="popularity">인기순</option>
                   <option value="review">리뷰순</option>
                   <option value="name">이름순</option>
                 </select>
@@ -216,56 +216,49 @@
         `)
       }
 
-      $(document).on('change', '#product_sort', e => {
-        const sortType = e.target.value
+      const getSortAndFilterOptions = () => {
+        const sort = $('select[name=product_sort] option:selected').val()
+        const filterOptopns = $('select[name=product_filter] option:selected')
 
+        const brand = filterOptopns[0].value
+        const category = filterOptopns[1].value
+        const type = filterOptopns[2].value
+
+        return {
+          sort,
+          brand,
+          category,
+          type,
+        }
+      }
+
+      const getProducts = sortAndFilterOptions => {
         $.ajax({
-          url: `/products/sort?type=${sortType}`,
+          url: '/products',
           method: 'GET',
+          data: sortAndFilterOptions,
           success: data => {
             $('#product_list').empty()
 
-            const { sortedProducts } = data
+            const { products } = data
 
-            for (const product of sortedProducts) {
+            for (const product of products) {
               displayProduct(product)
             }
           },
         })
+      }
+
+      $(document).on('change', 'select[name=product_sort]', () => {
+        const sortAndFilterOptions = getSortAndFilterOptions()
+
+        getProducts(sortAndFilterOptions)
       })
 
-      $(document).on('change', 'select[name=product_filter]', e => {
-        const filterOption = {}
+      $(document).on('change', 'select[name=product_filter]', () => {
+        const sortAndFilterOptions = getSortAndFilterOptions()
 
-        $('select[name=product_filter] option:selected').each((idx, el) => {
-          if (idx === 0) filterOption['brand'] = el.value
-          else if (idx === 1) filterOption['category'] = el.value
-          else filterOption['type'] = el.value
-        })
-
-        const { brand, category, type } = filterOption
-
-        $.ajax({
-          url: `/products/filter?brand=${brand}&category=${category}&type=${type}`,
-          method: 'GET',
-          success: data => {
-            $('#product_list').empty()
-
-            const { filteredProducts } = data
-
-            if (filteredProducts.length > 0) {
-              for (const product of filteredProducts) {
-                displayProduct(product)
-              }
-            } else {
-              $('#product_list').append(`
-                <div class="col-md-4">
-                  <h5>해당되는 제품이 존재하지 않습니다.</h5>
-                </div>
-              `)
-            }
-          },
-        })
+        getProducts(sortAndFilterOptions)
       })
     </script>
   </body>
