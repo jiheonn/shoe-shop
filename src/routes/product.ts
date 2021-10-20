@@ -8,10 +8,6 @@ const router = express.Router()
 /* /products */
 router.get('/', productController.getProducts)
 
-router.get('/sort', productController.getSortedProducts)
-
-router.get('/filter', productController.getFilteredProducts)
-
 router.get('/:p_id', productController.getProductDetails)
 
 router.get('/:p_id/size', productController.getProductSizes)
