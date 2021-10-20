@@ -13,128 +13,111 @@ declare module 'express' {
 }
 
 const getProducts = async (req: express.Request, res: express.Response) => {
-  const username = req.user ? req.user.u_name : ''
+  if (Object.keys(req.query).length === 0) {
+    const username = req.user ? req.user.u_name : ''
 
-  const products = await Product.findAll({
-    raw: true,
-  })
-
-  const brands = await Brand.findAll({ raw: true })
-
-  const categories = await Category.findAll({ raw: true })
-
-  res.render('products', {
-    username,
-    products: formatProductInfo(products),
-    brands,
-    categories,
-  })
-}
-
-const getSortedProducts = async (
-  req: express.Request,
-  res: express.Response,
-) => {
-  const { type } = req.query
-
-  let sortedProducts
-
-  if (type === 'regist') {
-    sortedProducts = await Product.findAll({
-      order: [['registrationDate', 'DESC']],
+    const products = await Product.findAll({
       raw: true,
     })
-  } else if (type === 'popular') {
-    sortedProducts = await Product.findAll({
-      attributes: {
-        include: [
-          [
-            sequelize.fn('SUM', sequelize.col('orderDetails.quantity')),
-            'totalNumberOrders',
-          ],
-        ],
-      },
-      include: [
-        {
-          model: OrderDetail,
-          as: 'orderDetails',
-          attributes: [],
-        },
-      ],
-      group: ['Product.id'],
-      order: sequelize.literal('totalNumberOrders DESC'),
-      raw: true,
-    })
-  } else if (type === 'review') {
-    sortedProducts = await Product.findAll({
-      attributes: {
-        include: [
-          [
-            sequelize.fn('COUNT', sequelize.col('reviews.products_id')),
-            'totalNumberReviews',
-          ],
-        ],
-      },
-      include: [
-        {
-          model: Review,
-          as: 'reviews',
-          attributes: [],
-        },
-      ],
-      group: ['Product.id'],
-      order: sequelize.literal('totalNumberReviews DESC'),
-      raw: true,
-    })
-  } else if (type === 'name') {
-    sortedProducts = await Product.findAll({
-      order: [['name', 'ASC']],
-      raw: true,
+
+    const brands = await Brand.findAll({ raw: true })
+
+    const categories = await Category.findAll({ raw: true })
+
+    res.render('products', {
+      username,
+      products: formatProductInfo(products),
+      brands,
+      categories,
     })
   } else {
-    sortedProducts = await Product.findAll({
-      raw: true,
+    const { sort, brand, category, type } = req.query
+
+    const optionDefault = ['브랜드', '카테고리', '상품타입', '전체상품']
+
+    const filterOptions = {}
+
+    // @ts-ignore
+    if (!optionDefault.includes(brand)) {
+      Object.assign(filterOptions, { brandId: brand })
+    }
+    // @ts-ignore
+    if (!optionDefault.includes(category)) {
+      Object.assign(filterOptions, { categoryId: category })
+    }
+    // @ts-ignore
+    if (!optionDefault.includes(type)) {
+      Object.assign(filterOptions, { type })
+    }
+
+    let products
+
+    if (sort === 'registration') {
+      products = await Product.findAll({
+        where: filterOptions,
+        order: [['registrationDate', 'DESC']],
+        raw: true,
+      })
+    } else if (sort === 'popularity') {
+      products = await Product.findAll({
+        attributes: {
+          include: [
+            [
+              sequelize.fn('SUM', sequelize.col('orderDetails.quantity')),
+              'totalNumberOrders',
+            ],
+          ],
+        },
+        include: [
+          {
+            model: OrderDetail,
+            as: 'orderDetails',
+            attributes: [],
+          },
+        ],
+        where: filterOptions,
+        group: ['Product.id'],
+        order: sequelize.literal('totalNumberOrders DESC'),
+        raw: true,
+      })
+    } else if (sort === 'review') {
+      products = await Product.findAll({
+        attributes: {
+          include: [
+            [
+              sequelize.fn('COUNT', sequelize.col('reviews.products_id')),
+              'totalNumberReviews',
+            ],
+          ],
+        },
+        include: [
+          {
+            model: Review,
+            as: 'reviews',
+            attributes: [],
+          },
+        ],
+        where: filterOptions,
+        group: ['Product.id'],
+        order: sequelize.literal('totalNumberReviews DESC'),
+        raw: true,
+      })
+    } else if (sort === 'name') {
+      products = await Product.findAll({
+        where: filterOptions,
+        order: [['name', 'ASC']],
+        raw: true,
+      })
+    } else {
+      products = await Product.findAll({
+        where: filterOptions,
+        raw: true,
+      })
+    }
+    res.send({
+      products: formatProductInfo(products),
     })
   }
-
-  res.send({
-    sortedProducts: formatProductInfo(sortedProducts),
-  })
-}
-
-const getFilteredProducts = async (
-  req: express.Request,
-  res: express.Response,
-) => {
-  const { brand, category, type } = req.query
-
-  console.log(brand, category, type)
-
-  const optionDefault = ['브랜드', '카테고리', '상품타입', '전체상품']
-
-  const filterOption = {}
-
-  // @ts-ignore
-  if (!optionDefault.includes(brand)) {
-    Object.assign(filterOption, { brandId: brand })
-  }
-  // @ts-ignore
-  if (!optionDefault.includes(category)) {
-    Object.assign(filterOption, { categoryId: category })
-  }
-  // @ts-ignore
-  if (!optionDefault.includes(type)) {
-    Object.assign(filterOption, { type })
-  }
-
-  const filteredProducts = await Product.findAll({
-    where: filterOption,
-    raw: true,
-  })
-
-  res.send({
-    filteredProducts: formatProductInfo(filteredProducts),
-  })
 }
 
 const getProductDetails = async (
@@ -230,8 +213,6 @@ const deleteReview = async (req: express.Request, res: express.Response) => {
 
 export default {
   getProducts,
-  getSortedProducts,
-  getFilteredProducts,
   getProductDetails,
   getProductSizes,
   updateLike,
