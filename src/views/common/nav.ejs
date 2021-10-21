@@ -62,11 +62,21 @@
     <div class="mr-5">
       <ul class="navbar-nav">
         <% if (username.length > 0) { %>
-        <li class="nav-item">
-          <a class="nav-link"><%= username %> 님</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/auth/logout">Logout</a>
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            id="navbarDropdown"
+            role="button"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            <%= username %> 님
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/auth/logout">Logout</a>
+          </div>
         </li>
         <% } else { %>
         <li class="nav-item">
