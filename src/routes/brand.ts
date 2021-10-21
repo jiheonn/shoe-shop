@@ -5,6 +5,6 @@ import brandController from '../controllers/brand'
 const router = express.Router()
 
 /* GET users listing. */
-router.get('/:id', brandController.getBrands)
+router.get('/:id', brandController.getBrandProducts)
 
 export default router
