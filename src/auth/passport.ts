@@ -23,7 +23,7 @@ export default app => {
     try {
       const user = await User.findOne({
         where: {
-          email: id,
+          id,
         },
         raw: true,
       })
