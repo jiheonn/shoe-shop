@@ -9,8 +9,7 @@ declare module 'express' {
 }
 
 const displayLogin = (req: express.Request, res: express.Response) => {
-  const message = req.flash('error')
-  res.render('login', { message })
+  res.render('login', { message: req.flash('error') })
 }
 
 const logout = (req: express.Request, res: express.Response) => {

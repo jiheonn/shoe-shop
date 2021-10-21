@@ -5,8 +5,6 @@ import { Product, Brand, OrderDetail } from '../db/models'
 import { formatProductInfo } from '../format'
 
 const displayIndex = async (req: express.Request, res: express.Response) => {
-  const username = req.user ? req.user.name : ''
-
   const recentProducts = await Product.findAll({
     order: [['registrationDate', 'DESC']],
     limit: 6,
@@ -39,9 +37,9 @@ const displayIndex = async (req: express.Request, res: express.Response) => {
   const brands = await Brand.findAll({ raw: true })
 
   res.render('index', {
-    username,
     recentProducts: formatProductInfo(recentProducts),
     popularProducts: formatProductInfo(popularProducts),
+    username: req.user ? req.user.name : '',
     brands,
   })
 }
