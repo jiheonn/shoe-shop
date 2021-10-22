@@ -8,16 +8,16 @@ const router = express.Router()
 /* /products */
 router.get('/', productController.getProducts)
 
-router.get('/:p_id', productController.getProductDetails)
+router.get('/:id', productController.getProductDetails)
 
-router.get('/:p_id/size', productController.getProductSizes)
+router.get('/:id/size', productController.getProductSizes)
 
-router.post('/:p_id/like', isLoggedIn, productController.updateLike)
+router.put('/:id/like', isLoggedIn, productController.updateLike)
 
-router.post('/:p_id/review', isLoggedIn, productController.insertReview)
+router.post('/:id/review', isLoggedIn, productController.insertReview)
 
-router.post('/:p_id/review/update', isLoggedIn, productController.updateReview)
+router.post('/:id/review/update', isLoggedIn, productController.updateReview)
 
-router.post('/:p_id/review/delete', isLoggedIn, productController.deleteReview)
+router.post('/:id/review/delete', isLoggedIn, productController.deleteReview)
 
 export default router
