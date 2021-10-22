@@ -1,7 +1,16 @@
 import * as express from 'express'
 import * as sequelize from 'sequelize'
 
-import { Product, Brand, Category, OrderDetail, Review } from '../db/models'
+import {
+  Product,
+  Brand,
+  Category,
+  OrderDetail,
+  Review,
+  ProductDetail,
+  Like,
+  User,
+} from '../db/models'
 import { formatProductInfo } from '../format'
 import db_querys from '../db/querys'
 
@@ -14,19 +23,16 @@ declare module 'express' {
 
 const getProducts = async (req: express.Request, res: express.Response) => {
   if (Object.keys(req.query).length === 0) {
-    const username = req.user ? req.user.u_name : ''
-
     const products = await Product.findAll({
       raw: true,
     })
 
     const brands = await Brand.findAll({ raw: true })
-
     const categories = await Category.findAll({ raw: true })
 
     res.render('products', {
-      username,
       products: formatProductInfo(products),
+      username: req.user ? req.user.name : '',
       brands,
       categories,
     })
@@ -124,63 +130,134 @@ const getProductDetails = async (
   req: express.Request,
   res: express.Response,
 ) => {
-  const username = req.user ? req.user.u_name : ''
+  const productId = req.params.id
 
-  const { p_id } = req.params
+  /*
+    Reference: https://github.com/sequelize/sequelize/issues/5193
 
-  const brandList = await db_querys.selectBrandList()
+    현재 product_details Table에 primary key (id) 가 없으므로
+    include dataValues 가 오직 1개만 반환되는 이슈가 발생
 
-  const rows = await db_querys.selectProductInfo(p_id)
-  const productInfo = formatProductInfo(rows)
+    1. primary key (id) 를 추가하면 해결된다고 함
+      -> 의미없는 primary key 를 추가하고 싶지 않음
+    2. { plain: false, raw: true } 추가
+      -> 1:M 관계에서 1 에 해당되는 dataValues 중복
 
-  const productColors = await db_querys.selectProductColors(p_id)
+    추후 product_details Table의 color column 이 서로 다른 여러개의 값을 가지게 된다면
+    2번 방법을 고려하여 M 에 해당되는 dataValues 추출하여 정리가 필요
+   */
+  let product = await Product.findOne({
+    include: [
+      {
+        model: ProductDetail,
+        as: 'productDetails',
+        attributes: ['color'],
+      },
+      {
+        model: Brand,
+        as: 'brands',
+        attributes: ['name'],
+      },
+      {
+        model: Category,
+        as: 'categories',
+        attributes: ['name'],
+      },
+      {
+        model: Review,
+        as: 'reviews',
+        include: [
+          {
+            model: User,
+            as: 'users',
+            attributes: ['email'],
+          },
+        ],
+      },
+      {
+        model: Like,
+        as: 'likes',
+      },
+    ],
+    where: {
+      id: productId,
+    },
+  })
+  product = product.get({ plain: true })
 
-  const productReview = await db_querys.selectProductReview(p_id)
-  // TODO: productReview type
-  // @ts-ignore
-  const review_count = productReview.length
-
-  const productLike = await db_querys.selectProductLike(p_id)
-
-  let productUserLike = {}
-  let u_id = ''
-  if (req.user) {
-    u_id = req.user.u_id
-    productUserLike = await db_querys.selectProductUserLike(p_id, u_id)
+  const user = {
+    id: '',
+    name: '',
+    email: '',
+    like: {},
   }
 
+  if (req.user) {
+    user.id = req.user.id
+    user.name = req.user.name
+    user.email = req.user.email
+    user.like = (await Like.findOne({
+      attributes: ['status'],
+      where: {
+        userId: user.id,
+        productId,
+      },
+      raw: true,
+    })) || { status: false }
+  }
+
+  console.log(user.like)
+
+  const brands = await Brand.findAll({ raw: true })
+
   res.render('product-detail', {
-    u_id,
-    p_id,
-    username,
-    brandList,
-    productInfo,
-    productColors,
-    productReview,
-    review_count,
-    productLike,
-    productUserLike,
+    product: formatProductInfo(product),
+    username: user.name,
+    user,
+    productId,
+    brands,
   })
 }
 
 const getProductSizes = async (req: express.Request, res: express.Response) => {
-  const { p_id } = req.params
-  const { p_color } = req.query
+  const productId = req.params.id
+  const { color } = req.query
 
-  const productSizes = await db_querys.selectProductSize(p_id, p_color)
-  res.send(productSizes)
+  const productSizes = await ProductDetail.findAll({
+    attributes: ['size'],
+    where: {
+      productId,
+      color,
+    },
+    raw: true,
+  })
+
+  res.send({ productSizes })
 }
 
 const updateLike = async (req: express.Request, res: express.Response) => {
-  const { p_id } = req.params
-  const { u_id, like_status } = req.body
+  const productId = req.params.id
+  const { userId, status } = req.body
 
-  if (like_status === 'false') {
-    await db_querys.insertProductLike(p_id, u_id)
+  const like = await Like.findOne({
+    where: {
+      userId,
+      productId,
+    },
+  })
 
-    await db_querys.updateProductLikeOn(p_id, u_id)
+  if (like) {
+    await like.update({
+      userId,
+      productId,
+      status,
+    })
   } else {
-    await db_querys.updateProductLikeOff(p_id, u_id)
+    await Like.create({
+      userId,
+      productId,
+      status,
+    })
   }
 
   res.send({ status: 'success' })
