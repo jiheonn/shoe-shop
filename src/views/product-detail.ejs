@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
   <% include ./common/head-meta %>
+
+  <style>
+    #like:hover {
+      color: #2eca6a;
+    }
+  </style>
+
   <body>
     <% include ./common/search %> <% include ./common/nav %>
 
@@ -11,9 +18,9 @@
           <div class="col-md-12 col-lg-8">
             <div class="title-single-box">
               <span class="color-text-a"
-                ><%= productInfo[0].p_reg_date %><br /><br
+                ><%= product.registrationDate %><br /><br
               /></span>
-              <h1 class="title-single"><%= productInfo[0].b_name %></h1>
+              <h1 class="title-single"><%= product.brands.name %></h1>
             </div>
           </div>
           <div class="col-md-12 col-lg-4">
@@ -29,7 +36,7 @@
                   <a href="/products">Product</a>
                 </li>
                 <li class="breadcrumb-item active" aria-current="page">
-                  <%= productInfo[0].p_name %>
+                  <%= product.name %>
                 </li>
               </ol>
             </nav>
@@ -48,7 +55,7 @@
               <div class="col-md-6">
                 <div class="agent-avatar-box">
                   <img
-                    src="<%= productInfo[0].p_image %>"
+                    src="<%= product.image %>"
                     alt=""
                     class="agent-avatar img-fluid"
                     style="width: 70%"
@@ -59,7 +66,7 @@
                 <div class="agent-info-box">
                   <div class="agent-title">
                     <div class="title-box-d">
-                      <h3 class="title-d"><%= productInfo[0].p_name %></h3>
+                      <h3 class="title-d"><%= product.name %></h3>
                     </div>
                   </div>
                   <div class="agent-content mb-3">
@@ -67,36 +74,34 @@
                       <p>
                         <strong>브랜드 </strong><br />
                         <span class="color-text-a"
-                          ><%= productInfo[0].b_name %></span
+                          ><%= product.brands.name %></span
                         >
                       </p>
                       <p>
                         <strong>카테고리 </strong><br />
                         <span class="color-text-a"
-                          ><%= productInfo[0].c_name %></span
+                          ><%= product.categories.name %></span
                         >
                       </p>
                       <p>
                         <strong>품번 </strong><br />
-                        <span id="p_id" class="color-text-a"
-                          ><%= productInfo[0].p_id %></span
+                        <span id="product_id" class="color-text-a"
+                          ><%= product.code %></span
                         >
                       </p>
                       <p>
                         <strong>타입 </strong><br />
-                        <span class="color-text-a">
-                          <%= productInfo[0].p_type %></span
-                        >
+                        <span class="color-text-a"> <%= product.type %></span>
                       </p>
                       <p>
-                        <strong>가격</strong><br />
+                        <strong>가격 </strong><br />
                         <span class="color-text-a"
-                          ><%= productInfo[0].p_price %> 원</span
+                          ><%= product.price %> 원</span
                         >
                       </p>
                       <p>
                         <span class="color-text-a">
-                          <%= productInfo[0].p_description %></span
+                          <%= product.description %></span
                         >
                       </p>
                     </div>
@@ -106,10 +111,10 @@
                         class="custom-select"
                         style="width: 150px"
                       >
-                        <option selected>Color</option>
-                        <% for (product of productColors) { %>
-                        <option value="<%= product.p_color %>">
-                          <%= product.p_color %>
+                        <option selected>색상</option>
+                        <% for (productDetails of product.productDetails) { %>
+                        <option value="<%= productDetails.color %>">
+                          <%= productDetails.color %>
                         </option>
                         <% } %>
                       </select>
@@ -118,62 +123,64 @@
                         class="custom-select"
                         style="width: 150px; margin-left: 10px"
                       >
-                        <option selected>Size</option>
+                        <option selected>사이즈</option>
                       </select>
                     </div>
                   </div>
                 </div>
               </div>
               <div class="col-12">
-                <% if (Object.keys(productUserLike).length === 0) { %>
+                <% if (user.id === '') { %>
                 <a href="/auth/login"><i class="far fa-heart fa-3x"></i></a>
-                <span id="heart_count" class="ml-1" style="font-size: 1.5rem"
-                  >좋아요 <%= productLike.like_count %></span
-                >
-                <% } else { %> <% if (productUserLike.like_check === 0) { %>
-                <i id="heart" class="far fa-heart fa-3x"></i>
-                <span id="heart_count" class="ml-1" style="font-size: 1.5rem"
-                  ><%= productLike.like_count %></span
-                >
+                <% } else { %> <% if (user.like.status === false) { %>
+                <i id="like" class="far fa-heart fa-3x"></i>
                 <% } else { %>
-                <i id="heart" class="fas fa-heart fa-3x"></i>
-                <span id="heart_count" class="ml-1" style="font-size: 1.5rem"
-                  ><%= productLike.like_count %></span
-                >
+                <i id="like" class="fas fa-heart fa-3x"></i>
                 <% } %> <% } %>
+                <span
+                  id="total_number_likes"
+                  class="ml-1"
+                  style="font-size: 1.5rem"
+                  >좋아요 <%= product.likes.filter(like => like.status ===
+                  true).length %></span
+                >
               </div>
               <div class="col-md-10 mt-5">
                 <div class="title-box-d">
-                  <h3 class="title-d">Review (<%= review_count %>)</h3>
+                  <h3 class="title-d">
+                    Review (<%= product.reviews.length %>)
+                  </h3>
                 </div>
                 <div class="box-comments">
                   <ul class="list-comments mt-5">
-                    <% if (review_count === 0) { %>
+                    <% if (product.reviews.length === 0) { %>
                     <li>
                       <p>
                         해당 상품에 대한 리뷰가 존재하지 않습니다. 리뷰를 작성해
                         보세요!
                       </p>
                     </li>
-                    <% } else { %> <% for (review of productReview) { %>
+                    <% } else { %> <% for (review of product.reviews) { %>
                     <li>
                       <div class="comment-details">
-                        <h4 class="comment-author"><%= review.u_id %></h4>
-                        <p id="<%= review.r_id %>" class="comment-description">
-                          > <%= review.r_contents %>
+                        <h4 class="comment-author">
+                          <%= review.users.email %>
+                        </h4>
+                        <p id="<%= review.id %>" class="comment-description">
+                          > <%= review.content %>
                         </p>
-                        <% if (review.u_id === u_id) { %>
+                        <% if (review.userId === user.id) { %>
                         <button
                           id="update_review"
                           class="btn ml-1"
-                          value="<%= review.r_id %>"
+                          value="<%= review.id %>"
                         >
                           수정하기
                         </button>
                         <button
                           id="delete_review"
                           class="btn"
-                          value="<%= review.r_id %>"
+                          value="<%= review.id %>"
                         >
                           삭제하기
                         </button>
@@ -190,19 +197,26 @@
                   </div>
                   <form
                     class="form-a"
-                    action="/products/<%= p_id %>/review"
+                    action="/products/<%= product.id %>/review"
                     method="POST"
                   >
-                    <input type="hidden" name="u_id" value="<%= u_id %>" />
+                    <input type="hidden" name="userId" value="<%= user.id %>" />
+                    <input
+                      type="hidden"
+                      name="productId"
+                      value="<%= productId %>"
+                    />
                     <div class="row">
                       <div class="col-md-6 mb-3">
                         <div class="form-group">
                           <label for="inputName">ID</label>
                           <input
+                            id="review_email"
                             type="text"
                             class="form-control form-control-lg form-control-a"
-                            id="input_ID"
                             placeholder="로그인 후 이용이 가능합니다."
+                            name="email"
+                            value="<%= user.email %>"
                             readonly
                             required
                           />
@@ -210,12 +224,12 @@
                       </div>
                       <div class="col-md-12 mb-3">
                         <div class="form-group">
-                          <label for="textMessage">Contents</label>
+                          <label for="textMessage">Content</label>
                           <textarea
-                            id="input_contents"
+                            id="review_content"
                             class="form-control"
                             placeholder="내용을 입력해 주세요 *"
-                            name="r_contents"
+                            name="content"
                             cols="45"
                             rows="8"
                             required
@@ -250,37 +264,68 @@
     <% include ./common/foot-meta.ejs %>
 
     <script>
+      // 해당 상품에 대한 색상의 사이즈 가져오기
+      $('#product_color').change(e => {
+        const color = e.target.value
+
+        // Default 값인 경우 실행 X
+        if (color === '색상') return false
+
+        const productId = $('input[name=productId]').val()
+
+        $.ajax({
+          url: `/products/${productId}/size`,
+          method: 'GET',
+          data: {
+            color,
+          },
+          success: data => {
+            const { productSizes } = data
+
+            for (product of productSizes) {
+              $('#product_size').append(`
+                  <option value=${product.size}>
+                    ${product.size}
+                  </option>
+                `)
+            }
+          },
+        })
+      })
+
       // 페이지 로드 시 로그인이 안되어 있다면, 리뷰 작성 폼 disable
       $(document).ready(() => {
-        const u_id = $('input[name=u_id]').val()
+        const userId = $('input[name=userId]').val()
 
-        if (u_id === '') {
-          $('#input_ID').attr('disabled', true)
-          $('#input_contents').attr('disabled', true)
-          $('#review_submit').attr('disabled', true)
-        } else {
-          $('#input_ID').val(u_id)
+        if (userId === '') {
+          $('#review_email').attr('disabled', true)
+          $('#review_content').attr('disabled', true)
         }
       })
 
       // 좋아요 off 상태에서 클릭 시 ON
-      $(document).on('click', '#heart.far.fa-heart.fa-3x', () => {
-        const u_id = $('input[name=u_id]').val()
-        const p_id = $('#p_id').text()
+      $(document).on('click', '#like.far.fa-heart.fa-3x', () => {
+        const userId = $('input[name=userId]').val()
+        const productId = $('input[name=productId]').val()
 
         $.ajax({
-          url: `/products/${p_id}/like`,
-          method: 'POST',
+          url: `/products/${productId}/like`,
+          method: 'PUT',
           data: {
-            u_id,
-            like_status: false,
+            userId,
+            status: true,
           },
           success: data => {
             if (data.status == 'success') {
-              $('#heart').attr('class', 'fas fa-heart fa-3x')
+              $('#like').attr('class', 'fas fa-heart fa-3x')
 
-              const heart_count = parseInt($('#heart_count').text(), 10) + 1
-              $('#heart_count').text(`${heart_count}`)
+              const totalNumberLikes = $('#total_number_likes')
+                .text()
+                .split(' ')[1]
+
+              $('#total_number_likes').text(
+                `좋아요 ${parseInt(totalNumberLikes, 10) + 1}`,
+              )
             } else {
               alert('문제가 발생했습니다. 잠시 후 다시 시도해 주세요.')
             }
@@ -289,23 +334,28 @@
       })
 
       // 좋아요 ON 상태에서 클릭 시 OFF
-      $(document).on('click', '.fas.fa-heart.fa-3x', () => {
-        const u_id = $('input[name=u_id]').val()
-        const p_id = $('#p_id').text()
+      $(document).on('click', '#like.fas.fa-heart.fa-3x', () => {
+        const userId = $('input[name=userId]').val()
+        const productId = $('input[name=productId]').val()
 
         $.ajax({
-          url: `/products/${p_id}/like`,
-          method: 'POST',
+          url: `/products/${productId}/like`,
+          method: 'PUT',
           data: {
-            u_id,
-            like_status: true,
+            userId,
+            status: false,
           },
           success: data => {
             if (data.status == 'success') {
-              $('#heart').attr('class', 'far fa-heart fa-3x')
+              $('#like').attr('class', 'far fa-heart fa-3x')
 
-              const heart_count = parseInt($('#heart_count').text(), 10) - 1
-              $('#heart_count').text(`${heart_count}`)
+              const totalNumberLikes = $('#total_number_likes')
+                .text()
+                .split(' ')[1]
+
+              $('#total_number_likes').text(
+                `좋아요 ${parseInt(totalNumberLikes, 10) - 1}`,
+              )
             } else {
               alert('문제가 발생했습니다. 잠시 후 다시 시도해 주세요.')
             }
@@ -313,31 +363,13 @@
         })
       })
 
-      // 해당 상품에 대한 색상의 사이즈 가져오기
-      $('#product_color').change(e => {
-        const p_color = e.target.value
+      // 로그인이 안되어 있는 경우 리뷰 작성 폼 submit 시 login redirect
+      $(document).on('click', '#review_submit', () => {
+        const userId = $('input[name=userId]').val()
 
-        // Default 값인 경우 실행 X
-        if (p_color === 'Color') return false
-
-        const p_id = $('#p_id').text()
-
-        $.ajax({
-          url: `/products/${p_id}/size`,
-          method: 'GET',
-          data: {
-            p_color,
-          },
-          success: data => {
-            for (product of data) {
-              $('#product_size').append(`
-                  <option value=${product.p_size}>
-                    ${product.p_size}
-                  </option>
-                `)
-            }
-          },
-        })
+        if (userId === '') {
+          location.href = '/auth/login'
+        }
       })
 
       // 1. 자신이 작성한 리뷰 중에서 수정하기 버튼 클릭 시
@@ -359,10 +391,10 @@
       $(document).on('click', '#modify_review', e => {
         const r_id = e.target.value
         const r_contents = $(`#${r_id} input`).val()
-        const p_id = $('#p_id').text()
+        const id = $('#product_id').text()
 
         $.ajax({
-          url: `/products/${p_id}/review/update`,
+          url: `/products/${id}/review/update`,
           method: 'POST',
           data: {
             r_id,
@@ -383,10 +415,10 @@
       $(document).on('click', '#delete_review', e => {
         const r_id = e.target.value
 
-        const p_id = $('#p_id').text()
+        const id = $('#product_id').text()
 
         $.ajax({
-          url: `/products/${p_id}/review/delete`,
+          url: `/products/${id}/review/delete`,
           method: 'POST',
           data: {
             r_id,
