@@ -14,10 +14,10 @@ router.get('/:id/size', productController.getProductSizes)
 
 router.put('/:id/like', isLoggedIn, productController.updateLike)
 
-router.post('/:id/review', isLoggedIn, productController.insertReview)
+router.post('/:id/review', isLoggedIn, productController.createReview)
 
-router.post('/:id/review/update', isLoggedIn, productController.updateReview)
+router.put('/:id/review', isLoggedIn, productController.updateReview)
 
-router.post('/:id/review/delete', isLoggedIn, productController.deleteReview)
+router.delete('/:id/review', isLoggedIn, productController.deleteReview)
 
 export default router
