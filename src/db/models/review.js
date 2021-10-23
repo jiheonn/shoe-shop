@@ -31,7 +31,8 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      created_date: {
+      createdDate: {
+        field: 'created_date',
         type: DataTypes.DATE,
         allowNull: false,
       },
