@@ -129,7 +129,7 @@
                   </div>
                 </div>
               </div>
-              <div class="col-12">
+              <div class="col-12 mt-3">
                 <% if (user.id === '') { %>
                 <a href="/auth/login"><i class="far fa-heart fa-3x"></i></a>
                 <% } else { %> <% if (user.like.status === false) { %>
@@ -152,7 +152,7 @@
                   </h3>
                 </div>
                 <div class="box-comments">
-                  <ul class="list-comments mt-5">
+                  <ul class="list-comments mt-4">
                     <% if (product.reviews.length === 0) { %>
                     <li>
                       <p>
@@ -161,11 +161,14 @@
                       </p>
                     </li>
                     <% } else { %> <% for (review of product.reviews) { %>
-                    <li>
+                    <li class="pb-1">
                       <div class="comment-details">
                         <h4 class="comment-author">
                           <%= review.users.email %>
                         </h4>
+                        <span style="color: gray"
+                          ><%= review.createdDate %></span
+                        >
                         <p id="<%= review.id %>" class="comment-description">
                           > <%= review.content %>
                         </p>
@@ -225,13 +228,21 @@
                       <div class="col-md-12 mb-3">
                         <div class="form-group">
                           <label for="textMessage">Content</label>
+                          <div
+                            id="review_content_count"
+                            class="mb-2 float-right"
+                          >
+                            (0 / 250)
+                          </div>
                           <textarea
                             id="review_content"
                             class="form-control"
+                            style="resize: none"
                             placeholder="내용을 입력해 주세요 *"
                             name="content"
                             cols="45"
-                            rows="8"
+                            rows="6"
+                            maxlength="250"
                             required
                           ></textarea>
                         </div>
@@ -291,16 +302,6 @@
             }
           },
         })
-      })
-
-      // 페이지 로드 시 로그인이 안되어 있다면, 리뷰 작성 폼 disable
-      $(document).ready(() => {
-        const userId = $('input[name=userId]').val()
-
-        if (userId === '') {
-          $('#review_email').attr('disabled', true)
-          $('#review_content').attr('disabled', true)
-        }
       })
 
       // 좋아요 off 상태에서 클릭 시 ON
@@ -363,6 +364,16 @@
         })
       })
 
+      // 페이지 로드 시 로그인이 안되어 있다면, 리뷰 작성 폼 disable
+      $(document).ready(() => {
+        const userId = $('input[name=userId]').val()
+
+        if (userId === '') {
+          $('#review_email').attr('disabled', true)
+          $('#review_content').attr('disabled', true)
+        }
+      })
+
       // 로그인이 안되어 있는 경우 리뷰 작성 폼 submit 시 login redirect
       $(document).on('click', '#review_submit', () => {
         const userId = $('input[name=userId]').val()
@@ -372,33 +383,53 @@
         }
       })
 
+      $(document).on('keyup', 'textarea[name=content]', e => {
+        $('#review_content_count').html(`(${e.target.value.length} / 250)`)
+      })
+
       // 1. 자신이 작성한 리뷰 중에서 수정하기 버튼 클릭 시
       // 리뷰 내용 읽기 -> 수정 폼으로 변경
       $(document).on('click', '#update_review', e => {
-        const r_id = e.target.value
+        const reviewId = e.target.value
 
-        let r_contents = $(`#${r_id}`).text().trim().replace('> ', '')
+        const content = $(`#${reviewId}`).text().trim().replace('> ', '')
 
-        $(`#${r_id}`).empty()
-        $(`#${r_id}`).append(`
-            <input class="form-control form-control-lg form-control-a" value="${r_contents}" />
+        $(`#${reviewId}`).empty()
+        $(`#${reviewId}`).append(`
+            <div id="modify_review_content_count" class="mb-2 float-right">
+              (${content.length} / 250)
+            </div>
+            <textarea
+              id="modify_review_content"
+              class="form-control"
+              style="resize: none;"
+              cols="33"
+              rows="8"
+              maxlength="250"
+            >${content}</textarea>
           `)
         $(e.target).attr('id', 'modify_review')
+        $('#modify_review').text('저장하기')
+      })
+
+      $(document).on('keyup', '#modify_review_content', e => {
+        const reviewId = e.target.parentElement.id
+        $(`#${reviewId} div`).html(`(${e.target.value.length} / 250)`)
       })
 
       // 2. 위의 1번 이벤트 이후(=수정 폼 작성 완료)
-      // 다시 수정하기 버튼을 클릭 시 POST 요청
+      // 다시 수정하기 버튼을 클릭 시 PUT 요청
       $(document).on('click', '#modify_review', e => {
-        const r_id = e.target.value
-        const r_contents = $(`#${r_id} input`).val()
-        const id = $('#product_id').text()
+        const reviewId = e.target.value
+        const content = $(`#${reviewId} textarea`).val()
+        const productId = $('input[name=productId]').val()
 
         $.ajax({
-          url: `/products/${id}/review/update`,
-          method: 'POST',
+          url: `/products/${productId}/review`,
+          method: 'PUT',
           data: {
-            r_id,
-            r_contents,
+            id: reviewId,
+            content,
           },
           success: data => {
             if (data.status === 'success') {
@@ -411,17 +442,16 @@
       })
 
       // 자신이 작성한 리뷰 중에서 삭제하기 버튼 클릭 시
-      // POST 요청
+      // DELETE 요청
       $(document).on('click', '#delete_review', e => {
-        const r_id = e.target.value
-
-        const id = $('#product_id').text()
+        const reviewId = e.target.value
+        const productId = $('input[name=productId]').val()
 
         $.ajax({
-          url: `/products/${id}/review/delete`,
-          method: 'POST',
+          url: `/products/${productId}/review`,
+          method: 'DELETE',
           data: {
-            r_id,
+            id: reviewId,
           },
           success: data => {
             if (data.status === 'success') {
