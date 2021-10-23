@@ -1,5 +1,7 @@
 import * as express from 'express'
 import * as sequelize from 'sequelize'
+import * as moment from 'moment'
+import 'moment-timezone'
 
 import {
   Product,
@@ -11,8 +13,7 @@ import {
   Like,
   User,
 } from '../db/models'
-import { formatProductInfo } from '../format'
-import db_querys from '../db/querys'
+import { formatProductInfo, formatDate } from '../format'
 
 // TODO: types 분리 필요
 declare module 'express' {
@@ -20,6 +21,8 @@ declare module 'express' {
     user: any
   }
 }
+
+moment.tz.setDefault('Asia/Seoul')
 
 const getProducts = async (req: express.Request, res: express.Response) => {
   if (Object.keys(req.query).length === 0) {
@@ -185,6 +188,14 @@ const getProductDetails = async (
   })
   product = product.get({ plain: true })
 
+  product.reviews = product.reviews.map(_review => {
+    const review = _review
+
+    review.createdDate = formatDate(review.createdDate)
+
+    return review
+  })
+
   const user = {
     id: '',
     name: '',
@@ -205,8 +216,6 @@ const getProductDetails = async (
       raw: true,
     })) || { status: false }
   }
-
-  console.log(user.like)
 
   const brands = await Brand.findAll({ raw: true })
 
@@ -263,27 +272,48 @@ const updateLike = async (req: express.Request, res: express.Response) => {
   res.send({ status: 'success' })
 }
 
-const insertReview = async (req: express.Request, res: express.Response) => {
-  const { p_id } = req.params
-  const { u_id, r_contents } = req.body
+const createReview = async (req: express.Request, res: express.Response) => {
+  const productId = req.params.id
+  const { userId, content } = req.body
 
-  await db_querys.insertProductReview(p_id, u_id, r_contents)
+  // await db_querys.insertProductReview(p_id, u_id, r_contents)
 
-  res.redirect(`/products/${p_id}`)
+  await Review.create({
+    userId,
+    productId,
+    content,
+    createdDate: moment(),
+  })
+
+  res.redirect(`/products/${productId}`)
 }
 
 const updateReview = async (req: express.Request, res: express.Response) => {
-  const { r_contents, r_id } = req.body
+  const { id, content } = req.body
 
-  await db_querys.updateProductReview(r_contents, r_id)
+  await Review.update(
+    {
+      content,
+      createdDate: moment(),
+    },
+    {
+      where: {
+        id,
+      },
+    },
+  )
 
   res.send({ status: 'success' })
 }
 
 const deleteReview = async (req: express.Request, res: express.Response) => {
-  const { r_id } = req.body
+  const { id } = req.body
 
-  await db_querys.deleteProductReview(r_id)
+  await Review.destroy({
+    where: {
+      id,
+    },
+  })
 
   res.send({ status: 'success' })
 }
@@ -293,7 +323,7 @@ export default {
   getProductDetails,
   getProductSizes,
   updateLike,
-  insertReview,
+  createReview,
   updateReview,
   deleteReview,
 }
