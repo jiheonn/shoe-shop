@@ -9,11 +9,12 @@ const getBrandProducts = async (
 ) => {
   const brandId = Number.parseInt(req.params.id, 10)
 
-  const products = await Product.findAll({
+  const products = await Product.findAndCountAll({
     where: {
       brandId,
     },
     raw: true,
+    limit: 6,
   })
 
   const brands = await Brand.findAll({ raw: true })
@@ -22,7 +23,8 @@ const getBrandProducts = async (
   const selectedBrand = brands.find(brand => brand.id === brandId)
 
   res.render('brands', {
-    products: formatProductInfo(products),
+    products: formatProductInfo(products.rows),
+    page: Math.ceil(products.count / 6),
     brandId: selectedBrand.id,
     brandName: selectedBrand.name,
     username: req.user ? req.user.name : '',

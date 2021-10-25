@@ -26,21 +26,28 @@ moment.tz.setDefault('Asia/Seoul')
 
 const getProducts = async (req: express.Request, res: express.Response) => {
   if (Object.keys(req.query).length === 0) {
-    const products = await Product.findAll({
+    const products = await Product.findAndCountAll({
       raw: true,
+      limit: 6,
     })
 
     const brands = await Brand.findAll({ raw: true })
     const categories = await Category.findAll({ raw: true })
 
     res.render('products', {
-      products: formatProductInfo(products),
+      products: formatProductInfo(products.rows),
+      page: Math.ceil(products.count / 6),
       username: req.user ? req.user.name : '',
       brands,
       categories,
     })
   } else {
-    const { sort, brand, category, type } = req.query
+    const { sort, brand, category, type, page } = req.query
+
+    // @ts-ignore
+    const pageNumber = Number.parseInt(page, 10)
+    const limit = 6
+    const offset = pageNumber > 1 ? limit * (pageNumber - 1) : 0
 
     const optionDefault = ['브랜드', '카테고리', '상품타입', '전체상품']
 
@@ -62,13 +69,15 @@ const getProducts = async (req: express.Request, res: express.Response) => {
     let products
 
     if (sort === 'registration') {
-      products = await Product.findAll({
+      products = await Product.findAndCountAll({
         where: filterOptions,
         order: [['registrationDate', 'DESC']],
+        offset,
+        limit,
         raw: true,
       })
     } else if (sort === 'popularity') {
-      products = await Product.findAll({
+      products = await Product.findAndCountAll({
         attributes: {
           include: [
             [
@@ -87,10 +96,13 @@ const getProducts = async (req: express.Request, res: express.Response) => {
         where: filterOptions,
         group: ['Product.id'],
         order: sequelize.literal('totalNumberOrders DESC'),
+        offset,
+        limit,
         raw: true,
+        subQuery: false,
       })
     } else if (sort === 'review') {
-      products = await Product.findAll({
+      products = await Product.findAndCountAll({
         attributes: {
           include: [
             [
@@ -109,22 +121,34 @@ const getProducts = async (req: express.Request, res: express.Response) => {
         where: filterOptions,
         group: ['Product.id'],
         order: sequelize.literal('totalNumberReviews DESC'),
+        offset,
+        limit,
         raw: true,
+        subQuery: false,
       })
     } else if (sort === 'name') {
-      products = await Product.findAll({
+      products = await Product.findAndCountAll({
         where: filterOptions,
         order: [['name', 'ASC']],
+        offset,
+        limit,
         raw: true,
       })
     } else {
-      products = await Product.findAll({
+      products = await Product.findAndCountAll({
         where: filterOptions,
+        offset,
+        limit,
         raw: true,
       })
     }
+
     res.send({
-      products: formatProductInfo(products),
+      products: formatProductInfo(products.rows),
+      page:
+        sort === 'popularity' || sort === 'review'
+          ? Math.ceil(products.count.length / 6)
+          : Math.ceil(products.count / 6),
     })
   }
 }
