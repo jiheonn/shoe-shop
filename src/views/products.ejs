@@ -132,26 +132,43 @@
         <div class="row">
           <div class="col-sm-12">
             <nav class="pagination-a">
-              <ul class="pagination justify-content-end">
-                <li class="page-item disabled">
-                  <a class="page-link" href="#" tabindex="-1">
+              <ul id="pagination" class="pagination justify-content-end">
+                <!-- <li class="page-item">
+                  <a
+                    class="page-link"
+                    href="javascript:void(0)"
+                    onclick="pagination('0')"
+                  >
                     <span class="ion-ios-arrow-back"></span>
                   </a>
+                </li> -->
+                <li id="first_page" class="page-item active">
+                  <a
+                    class="page-link"
+                    href="javascript:void(0)"
+                    onclick="pagination(this)"
+                    >1</a
+                  >
                 </li>
+                <% for (let i = 2; i <= page; i++) { %>
                 <li class="page-item">
-                  <a class="page-link" href="#">1</a>
+                  <a
+                    class="page-link"
+                    href="javascript:void(0)"
+                    onclick="pagination(this)"
+                    ><%= i %></a
+                  >
                 </li>
-                <li class="page-item active">
-                  <a class="page-link" href="#">2</a>
-                </li>
-                <li class="page-item">
-                  <a class="page-link" href="#">3</a>
-                </li>
-                <li class="page-item next">
-                  <a class="page-link" href="#">
+                <% } %>
+                <!-- <li class="page-item next">
+                  <a
+                    class="page-link"
+                    href="javascript:void(0)"
+                    onclick="pagination('-1')"
+                  >
                     <span class="ion-ios-arrow-forward"></span>
                   </a>
-                </li>
+                </li> -->
               </ul>
             </nav>
           </div>
@@ -168,6 +185,39 @@
     <% include ./common/foot-meta.ejs %>
 
     <script>
+      const pagination = el => {
+        $('.page-item.active').removeClass('active')
+        el.parentElement.className += ' active'
+
+        const sortAndFilterOptions = getSortAndFilterOptions()
+
+        $.ajax({
+          url: '/products',
+          method: 'GET',
+          data: {
+            ...sortAndFilterOptions,
+            page: el.text,
+          },
+          success: data => {
+            $('#product_list').empty()
+
+            const { products } = data
+
+            if (products.length > 0) {
+              for (const product of products) {
+                displayProduct(product)
+              }
+            } else {
+              $('#product_list').append(`
+                <div class="col-md-4">
+                  <p>해당되는 상품이 존재하지 않습니다.</p>
+                </div>
+              `)
+            }
+          },
+        })
+      }
+
       const displayProduct = product => {
         $('#product_list').append(`
           <div class="col-md-4">
@@ -216,6 +266,19 @@
         `)
       }
 
+      const displayPage = pageNumber => {
+        $('#pagination').append(`
+          <li class="page-item">
+            <a
+              class="page-link"
+              href="javascript:void(0)"
+              onclick="pagination(this)"
+              >${pageNumber}</a
+            >
+          </li>
+        `)
+      }
+
       const getSortAndFilterOptions = () => {
         const sort = $('select[name=product_sort] option:selected').val()
         const filterOptopns = $('select[name=product_filter] option:selected')
@@ -239,12 +302,28 @@
           data: sortAndFilterOptions,
           success: data => {
             $('#product_list').empty()
+            $('#pagination').empty()
 
-            const { products } = data
+            const { products, page } = data
 
-            for (const product of products) {
-              displayProduct(product)
+            if (products.length > 0) {
+              for (const product of products) {
+                displayProduct(product)
+              }
+            } else {
+              $('#product_list').append(`
+                <div class="col-md-4">
+                  <p>해당되는 상품이 존재하지 않습니다.</p>
+                </div>
+              `)
             }
+
+            for (let pageNumber = 1; pageNumber <= page; pageNumber++) {
+              displayPage(pageNumber)
+            }
+
+            $('#pagination>li:eq(0)').attr('id', 'first_page')
+            $('#first_page').addClass('active')
           },
         })
       }
