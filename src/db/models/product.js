@@ -6,32 +6,32 @@ module.exports = (sequelize, DataTypes) => {
       this.belongsTo(models.Brand, {
         as: 'brands',
         foreignKey: 'brandId',
-        onDelete: 'cascade',
+        onDelete: 'CASCADE',
       })
       this.belongsTo(models.Category, {
         as: 'categories',
         foreignKey: 'categoryId',
-        onDelete: 'cascade',
+        onDelete: 'CASCADE',
       })
       this.hasMany(models.ProductDetail, {
         as: 'productDetails',
         foreignKey: 'productId',
-        onDelete: 'cascade',
+        onDelete: 'CASCADE',
       })
       this.hasMany(models.Review, {
         as: 'reviews',
         foreignKey: 'productId',
-        onDelete: 'cascade',
+        onDelete: 'CASCADE',
       })
       this.hasMany(models.OrderDetail, {
         as: 'orderDetails',
         foreignKey: 'productId',
-        onDelete: 'cascade',
+        onDelete: 'CASCADE',
       })
       this.hasMany(models.Like, {
         as: 'likes',
         foreignKey: 'productId',
-        onDelete: 'cascade',
+        onDelete: 'CASCADE',
       })
     }
   }
@@ -49,6 +49,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       code: {
         type: DataTypes.STRING,
+        unique: true,
         allowNull: false,
       },
       name: {

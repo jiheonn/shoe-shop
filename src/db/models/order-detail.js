@@ -6,12 +6,12 @@ module.exports = (sequelize, DataTypes) => {
       this.belongsTo(models.Order, {
         as: 'orders',
         foreignKey: 'orderId',
-        onDelete: 'cascade',
+        onDelete: 'CASCADE',
       })
       this.belongsTo(models.Product, {
         as: 'products',
         foreignKey: 'productId',
-        onDelete: 'cascade',
+        onDelete: 'CASCADE',
       })
     }
   }

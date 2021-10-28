@@ -6,12 +6,12 @@ module.exports = (sequelize, DataTypes) => {
       this.belongsTo(models.User, {
         as: 'users',
         foreignKey: 'userId',
-        onDelete: 'cascade',
+        onDelete: 'CASCADE',
       })
       this.hasMany(models.OrderDetail, {
         as: 'orderDetails',
         foreignKey: 'orderId',
-        onDelete: 'cascade',
+        onDelete: 'CASCADE',
       })
     }
   }

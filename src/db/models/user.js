@@ -6,17 +6,17 @@ module.exports = (sequelize, DataTypes) => {
       this.hasMany(models.Review, {
         as: 'reviews',
         foreignKey: 'userId',
-        onDelete: 'cascade',
+        onDelete: 'CASCADE',
       })
       this.hasMany(models.Order, {
         as: 'orders',
         foreignKey: 'userId',
-        onDelete: 'cascade',
+        onDelete: 'CASCADE',
       })
       this.hasMany(models.Like, {
         as: 'likes',
         foreignKey: 'userId',
-        onDelete: 'cascade',
+        onDelete: 'CASCADE',
       })
     }
   }
@@ -24,6 +24,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       email: {
         type: DataTypes.STRING,
+        unique: true,
         allowNull: false,
       },
       password: {
