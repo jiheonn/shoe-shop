@@ -8,7 +8,8 @@ module.exports = {
           model: 'products',
           key: 'id',
         },
-        onDelete: 'cascade',
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
       },
       size: {
         allowNull: false,

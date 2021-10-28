@@ -8,7 +8,8 @@ module.exports = {
           model: 'orders',
           key: 'id',
         },
-        onDelete: 'cascade',
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
       },
       products_id: {
         allowNull: false,
@@ -17,7 +18,8 @@ module.exports = {
           model: 'products',
           key: 'id',
         },
-        onDelete: 'cascade',
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
       },
       quantity: {
         allowNull: false,

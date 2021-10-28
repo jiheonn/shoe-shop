@@ -14,7 +14,8 @@ module.exports = {
           model: 'brands',
           key: 'id',
         },
-        onDelete: 'cascade',
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
       },
       categories_id: {
         allowNull: false,
@@ -23,7 +24,8 @@ module.exports = {
           model: 'categories',
           key: 'id',
         },
-        onDelete: 'cascade',
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
       },
       code: {
         allowNull: false,
