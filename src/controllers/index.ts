@@ -1,7 +1,7 @@
 import * as express from 'express'
 import * as sequelize from 'sequelize'
 
-import { Product, Brand, OrderDetail } from '../db/models'
+import { Product, Brand, OrderDetail, Category } from '../db/models'
 import { formatProductInfo } from '../format'
 
 const displayIndex = async (req: express.Request, res: express.Response) => {
@@ -35,12 +35,14 @@ const displayIndex = async (req: express.Request, res: express.Response) => {
   })
 
   const brands = await Brand.findAll({ raw: true })
+  const categories = await Category.findAll({ raw: true })
 
   res.render('index', {
     recentProducts: formatProductInfo(recentProducts),
     popularProducts: formatProductInfo(popularProducts),
     username: req.user ? req.user.name : '',
     brands,
+    categories,
   })
 }
 

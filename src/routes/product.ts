@@ -8,6 +8,8 @@ const router = express.Router()
 /* /products */
 router.get('/', productController.getProducts)
 
+router.get('/search', productController.getSearchedProducts)
+
 router.get('/:id', productController.getProductDetails)
 
 router.get('/:id/size', productController.getProductSizes)

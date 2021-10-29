@@ -153,6 +153,60 @@ const getProducts = async (req: express.Request, res: express.Response) => {
   }
 }
 
+const getSearchedProducts = async (
+  req: express.Request,
+  res: express.Response,
+) => {
+  const { keyword, brand, category, type } = req.query
+
+  const filterOptions = {}
+
+  if (brand !== 'all') {
+    Object.assign(filterOptions, { brandId: brand })
+  }
+  if (category !== 'all') {
+    Object.assign(filterOptions, { categoryId: category })
+  }
+  if (type !== 'all') {
+    Object.assign(filterOptions, { type })
+  }
+
+  const products = await Product.findAndCountAll({
+    where: {
+      ...filterOptions,
+      [sequelize.Op.or]: [
+        {
+          code: {
+            [sequelize.Op.like]: `%${keyword}%`,
+          },
+        },
+        {
+          name: {
+            [sequelize.Op.like]: `%${keyword}%`,
+          },
+        },
+        {
+          description: {
+            [sequelize.Op.like]: `%${keyword}%`,
+          },
+        },
+      ],
+    },
+    raw: true,
+  })
+
+  const brands = await Brand.findAll({ raw: true })
+  const categories = await Category.findAll({ raw: true })
+
+  res.render('product-search', {
+    products: formatProductInfo(products.rows),
+    totalNumberOfProducts: products.count,
+    username: req.user ? req.user.name : '',
+    brands,
+    categories,
+  })
+}
+
 const getProductDetails = async (
   req: express.Request,
   res: express.Response,
@@ -242,6 +296,7 @@ const getProductDetails = async (
   }
 
   const brands = await Brand.findAll({ raw: true })
+  const categories = await Category.findAll({ raw: true })
 
   res.render('product-detail', {
     product: formatProductInfo(product),
@@ -249,6 +304,7 @@ const getProductDetails = async (
     user,
     productId,
     brands,
+    categories,
   })
 }
 
@@ -344,6 +400,7 @@ const deleteReview = async (req: express.Request, res: express.Response) => {
 
 export default {
   getProducts,
+  getSearchedProducts,
   getProductDetails,
   getProductSizes,
   updateLike,
