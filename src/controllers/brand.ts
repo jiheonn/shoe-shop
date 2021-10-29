@@ -22,7 +22,7 @@ const getBrandProducts = async (
 
   const selectedBrand = brands.find(brand => brand.id === brandId)
 
-  res.render('brands', {
+  res.render('brand', {
     products: formatProductInfo(products.rows),
     page: Math.ceil(products.count / 6),
     brandId: selectedBrand.id,

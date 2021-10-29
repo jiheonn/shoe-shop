@@ -34,7 +34,7 @@ const getProducts = async (req: express.Request, res: express.Response) => {
     const brands = await Brand.findAll({ raw: true })
     const categories = await Category.findAll({ raw: true })
 
-    res.render('products', {
+    res.render('product', {
       products: formatProductInfo(products.rows),
       page: Math.ceil(products.count / 6),
       username: req.user ? req.user.name : '',

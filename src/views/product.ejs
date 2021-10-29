@@ -54,14 +54,14 @@
           <div class="col-12 mb-3">
             <div class="grid-option" style="float: left">
               <form>
-                <select class="custom-select" name="product_filter">
+                <select class="custom-select mb-1" name="product_filter">
                   <option selected>브랜드</option>
                   <option value="전체상품">전체상품</option>
                   <% for (brand of brands) { %>
                   <option value="<%= brand.id %>"><%= brand.name %></option>
                   <% } %>
                 </select>
-                <select class="custom-select" name="product_filter">
+                <select class="custom-select mb-1" name="product_filter">
                   <option selected>카테고리</option>
                   <option value="전체상품">전체상품</option>
                   <% for (category of categories) { %>
@@ -70,7 +70,7 @@
                   </option>
                   <% } %>
                 </select>
-                <select class="custom-select" name="product_filter">
+                <select class="custom-select mb-1" name="product_filter">
                   <option selected>상품타입</option>
                   <option value="전체상품">전체상품</option>
                   <option value="남녀공용">남녀공용</option>
@@ -338,6 +338,10 @@
         const sortAndFilterOptions = getSortAndFilterOptions()
 
         getProducts(sortAndFilterOptions)
+      })
+
+      $(document).ready(() => {
+        $('.navbar-nav.ml-auto>li:eq(1)').addClass('active')
       })
     </script>
   </body>
