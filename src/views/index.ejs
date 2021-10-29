@@ -190,5 +190,11 @@
     <div id="preloader"></div>
 
     <% include ./common/foot-meta.ejs %>
+
+    <script>
+      $(document).ready(() => {
+        $('.navbar-nav.ml-auto>li:eq(0)').addClass('active')
+      })
+    </script>
   </body>
 </html>
