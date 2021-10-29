@@ -2,66 +2,69 @@
 <!--/ Form Search Star /-->
 <div class="box-collapse">
   <div class="title-box-d">
-    <h3 class="title-d">Search Property</h3>
+    <h3 class="title-d">Search Product</h3>
   </div>
   <span class="close-box-collapse right-boxed ion-ios-close"></span>
   <div class="box-collapse-wrap form">
-    <form class="form-a">
+    <form class="form-a" method="GET" action="/products/search">
       <div class="row">
         <div class="col-md-12 mb-2">
           <div class="form-group">
-            <label for="Type">Keyword</label>
+            <label for="keyword">Keyword</label>
             <input
               type="text"
               class="form-control form-control-lg form-control-a"
               placeholder="Keyword"
+              name="keyword"
             />
           </div>
         </div>
         <div class="col-md-6 mb-2">
           <div class="form-group">
-            <label for="Type">Type</label>
+            <label for="brand">Brand</label>
             <select
               class="form-control form-control-lg form-control-a"
-              id="Type"
+              id="brand"
+              name="brand"
             >
-              <option>All Type</option>
-              <option>For Rent</option>
-              <option>For Sale</option>
-              <option>Open House</option>
+              <option value="all" selected>All Brand</option>
+              <% for (brand of brands) { %>
+              <option value="<%= brand.id %>"><%= brand.name %></option>
+              <% } %>
             </select>
           </div>
         </div>
         <div class="col-md-6 mb-2">
           <div class="form-group">
-            <label for="city">City</label>
+            <label for="category">Category</label>
             <select
               class="form-control form-control-lg form-control-a"
               id="city"
+              name="category"
             >
-              <option>All City</option>
-              <option>Alabama</option>
-              <option>Arizona</option>
-              <option>California</option>
-              <option>Colorado</option>
+              <option value="all" selected>All Category</option>
+              <% for (category of categories) { %>
+              <option value="<%= category.id %>"><%= category.name %></option>
+              <% } %>
             </select>
           </div>
         </div>
         <div class="col-md-6 mb-2">
           <div class="form-group">
-            <label for="bedrooms">Bedrooms</label>
+            <label for="type">Type</label>
             <select
               class="form-control form-control-lg form-control-a"
               id="bedrooms"
+              name="type"
             >
-              <option>Any</option>
-              <option>01</option>
-              <option>02</option>
-              <option>03</option>
+              <option value="all" selected>All Type</option>
+              <option value="남녀공용">남녀공용</option>
+              <option value="남성용">남성용</option>
+              <option value="여성용">여성용</option>
             </select>
           </div>
         </div>
-        <div class="col-md-6 mb-2">
+        <!-- <div class="col-md-6 mb-2">
           <div class="form-group">
             <label for="garages">Garages</label>
             <select
@@ -104,9 +107,9 @@
               <option>$200,000</option>
             </select>
           </div>
-        </div>
+        </div> -->
         <div class="col-md-12">
-          <button type="submit" class="btn btn-b">Search Property</button>
+          <button type="submit" class="btn btn-b">Search</button>
         </div>
       </div>
     </form>
