@@ -20,7 +20,7 @@
   "rules": {
     "prettier/prettier": "error",
     "camelcase": "off",
-    "arrow-body-style": "off",
+    // "arrow-body-style": "off",
     "import/extensions": [
       "error",
       "ignorePackages",
