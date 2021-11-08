@@ -1,8 +1,6 @@
 import * as util from 'util'
 import * as crypto from 'crypto'
 
-import { User } from '../db/models'
-
 const randomBytesPromise = util.promisify(crypto.randomBytes)
 const pbkdf2Promise = util.promisify(crypto.pbkdf2)
 
@@ -14,23 +12,16 @@ const createSalt = async () => {
 
 export const createHashedPassword = async password => {
   const salt = await createSalt()
-
   const key = await pbkdf2Promise(password, salt, 99999, 64, 'sha512')
   const hashedPassword = key.toString('base64')
 
   return { hashedPassword, salt }
 }
 
-export const compare = async (userId, password) => {
-  const salt = await User.findOne({
-    attributes: ['salt'],
-    where: {
-      id: userId,
-    },
-    raw: true,
-  }).then(result => result.salt)
+export const verifyPassword = async (password, userSalt, userPassword) => {
+  const key = await pbkdf2Promise(password, userSalt, 99999, 64, 'sha512')
+  const hashedPassword = key.toString('base64')
 
-  const key = await pbkdf2Promise(password, salt, 99999, 64, 'sha512')
-
-  return key.toString('base64')
+  if (hashedPassword === userPassword) return true
+  return false
 }
