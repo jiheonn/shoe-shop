@@ -1,12 +1,15 @@
 import * as express from 'express'
 import * as jwt from 'jsonwebtoken'
+import * as dotenv from 'dotenv'
 
 // TODO: types 분리 필요
 declare module 'express' {
   export interface Request {
-    decoded: any
+    user: any
   }
 }
+
+dotenv.config()
 
 const verifyToken = (
   req: express.Request,
@@ -15,7 +18,8 @@ const verifyToken = (
 ) => {
   // 인증 완료
   try {
-    req.decoded = jwt.verify(req.headers.authorization, process.env.JWT_SECRET)
+    // decoded
+    req.user = jwt.verify(req.headers.authorization, process.env.JWT_SECRET)
     return next()
   } catch (error) {
     // 인증 실패
