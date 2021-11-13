@@ -5,7 +5,7 @@
     "airbnb-base",
     "plugin:import/errors",
     "plugin:import/warnings",
-    // "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended",
     "plugin:prettier/recommended"
   ],
   "parserOptions": {
@@ -19,8 +19,7 @@
   "ignorePatterns": ["node_modules/"],
   "rules": {
     "prettier/prettier": "error",
-    "camelcase": "off",
-    // "arrow-body-style": "off",
+    // "camelcase": "off",
     "import/extensions": [
       "error",
       "ignorePackages",
