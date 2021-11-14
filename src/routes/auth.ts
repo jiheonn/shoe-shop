@@ -4,9 +4,8 @@ import * as passport from 'passport'
 import authController from '../controllers/auth'
 import { isLoggedIn, isNotLoggedIn } from '../middlewares/auth'
 
-const router = express.Router()
+const router: express.Router = express.Router()
 
-/* /auth */
 router.get('/login', isNotLoggedIn, authController.displayLogin)
 
 router.post(

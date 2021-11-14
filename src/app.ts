@@ -16,7 +16,7 @@ import passportConifg from './auth/passport'
 
 dotenv.config()
 
-const app = express()
+const app: express.Application = express()
 
 sessionConfig(app)
 passportConifg(app)

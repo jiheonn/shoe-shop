@@ -1,14 +1,11 @@
 import * as express from 'express'
 
-// TODO: types 분리 필요
-declare module 'express' {
-  export interface Request {
-    flash: any
-    session: any
-  }
+export interface Request extends express.Request {
+  flash: any
+  session: any
 }
 
-const displayLogin = (req: express.Request, res: express.Response) => {
+const displayLogin = (req: Request, res: express.Response): void => {
   res.render('login', { message: req.flash('error') })
 }
 
@@ -52,7 +49,7 @@ const displayLogin = (req: express.Request, res: express.Response) => {
   }
 */
 
-const logout = (req: express.Request, res: express.Response) => {
+const logout = (req: Request, res: express.Response): void => {
   req.session.destroy()
   res.redirect('/')
 }

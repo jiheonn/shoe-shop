@@ -3,9 +3,8 @@ import * as express from 'express'
 import productController from '../controllers/product'
 import { isLoggedIn } from '../middlewares/auth'
 
-const router = express.Router()
+const router: express.Router = express.Router()
 
-/* /products */
 router.get('/', productController.getProducts)
 
 router.get('/search', productController.getSearchedProducts)
