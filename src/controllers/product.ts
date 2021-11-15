@@ -15,16 +15,16 @@ import {
 } from '../db/models'
 import { formatProductInfo, formatDate } from '../format'
 
-// TODO: types 분리 필요
-declare module 'express' {
-  export interface Request {
-    user: any
-  }
+export interface Request extends express.Request {
+  user: any
 }
 
 moment.tz.setDefault('Asia/Seoul')
 
-const getProducts = async (req: express.Request, res: express.Response) => {
+const getProducts = async (
+  req: express.Request,
+  res: express.Response,
+): Promise<void> => {
   if (Object.keys(req.query).length === 0) {
     const products = await Product.findAndCountAll({
       raw: true,
@@ -156,7 +156,7 @@ const getProducts = async (req: express.Request, res: express.Response) => {
 const getSearchedProducts = async (
   req: express.Request,
   res: express.Response,
-) => {
+): Promise<void> => {
   const { keyword, brand, category, type } = req.query
 
   const filterOptions = {}
@@ -210,7 +210,7 @@ const getSearchedProducts = async (
 const getProductDetails = async (
   req: express.Request,
   res: express.Response,
-) => {
+): Promise<void> => {
   const productId = req.params.id
 
   /*
@@ -308,7 +308,10 @@ const getProductDetails = async (
   })
 }
 
-const getProductSizes = async (req: express.Request, res: express.Response) => {
+const getProductSizes = async (
+  req: express.Request,
+  res: express.Response,
+): Promise<void> => {
   const productId = req.params.id
   const { color } = req.query
 
@@ -324,7 +327,10 @@ const getProductSizes = async (req: express.Request, res: express.Response) => {
   res.send({ productSizes })
 }
 
-const updateLike = async (req: express.Request, res: express.Response) => {
+const updateLike = async (
+  req: express.Request,
+  res: express.Response,
+): Promise<void> => {
   const productId = req.params.id
   const { userId, status } = req.body
 
@@ -352,7 +358,10 @@ const updateLike = async (req: express.Request, res: express.Response) => {
   res.send({ status: 'success' })
 }
 
-const createReview = async (req: express.Request, res: express.Response) => {
+const createReview = async (
+  req: express.Request,
+  res: express.Response,
+): Promise<void> => {
   const productId = req.params.id
   const { userId, content } = req.body
 
@@ -368,7 +377,10 @@ const createReview = async (req: express.Request, res: express.Response) => {
   res.redirect(`/products/${productId}`)
 }
 
-const updateReview = async (req: express.Request, res: express.Response) => {
+const updateReview = async (
+  req: express.Request,
+  res: express.Response,
+): Promise<void> => {
   const { id, content } = req.body
 
   await Review.update(
@@ -386,7 +398,10 @@ const updateReview = async (req: express.Request, res: express.Response) => {
   res.send({ status: 'success' })
 }
 
-const deleteReview = async (req: express.Request, res: express.Response) => {
+const deleteReview = async (
+  req: express.Request,
+  res: express.Response,
+): Promise<void> => {
   const { id } = req.body
 
   await Review.destroy({

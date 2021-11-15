@@ -4,7 +4,10 @@ import * as sequelize from 'sequelize'
 import { Product, Brand, OrderDetail, Category } from '../db/models'
 import { formatProductInfo } from '../format'
 
-const displayIndex = async (req: express.Request, res: express.Response) => {
+const displayIndex = async (
+  req: express.Request,
+  res: express.Response,
+): Promise<void> => {
   const recentProducts = await Product.findAll({
     order: [['registrationDate', 'DESC']],
     limit: 6,

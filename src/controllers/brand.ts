@@ -6,8 +6,8 @@ import { formatProductInfo } from '../format'
 const getBrandProducts = async (
   req: express.Request,
   res: express.Response,
-) => {
-  const brandId = Number.parseInt(req.params.id, 10)
+): Promise<void> => {
+  const brandId: number = Number.parseInt(req.params.id, 10)
 
   const products = await Product.findAndCountAll({
     where: {
